@@ -1,4 +1,5 @@
 import 'package:ams/model/vehicle/add_vechiles.dart';
+import 'package:ams/model/vehicle/get_vechiles.dart';
 import 'package:ams/model/vehicle/vehicle_cat.dart';
 import 'package:ams/model/vehicle/vehicle_sub_cat.dart';
 import 'package:equatable/equatable.dart';
@@ -17,12 +18,12 @@ class GetAllVechilesLoadingState extends VehicleState {
 }
 
 class GetAllVechilesLoadedState extends VehicleState {
-  final List<AuthResponseData>? authResponse;
+  final GetAllVehiclesResponseData getAllVehiclesResponseData;
 
-  GetAllVechilesLoadedState(this.authResponse);
+  GetAllVechilesLoadedState(this.getAllVehiclesResponseData);
 
   @override
-  List<Object?> get props => [authResponse];
+  List<Object?> get props => [getAllVehiclesResponseData];
 }
 
 class GetAllVechilesErrorState extends VehicleState {

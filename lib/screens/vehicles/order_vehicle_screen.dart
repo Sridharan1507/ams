@@ -1,10 +1,18 @@
 
 import 'dart:convert';
 
+import 'package:ams/bloc/vehicle/vehicle_state.dart';
+import 'package:ams/constant.dart';
+import 'package:ams/model/vehicle/get_vechiles.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
+import '../../model/vehicle/vehicle_sub_cat.dart';
+import 'controller.dart';
+
 class HalfImageHalfTextScreen extends StatefulWidget {
+  final VechileList vehicleSubCatResponseData;
+  HalfImageHalfTextScreen({required this.vehicleSubCatResponseData});
   @override
   _HalfImageHalfTextScreenState createState() =>
       _HalfImageHalfTextScreenState();
@@ -99,45 +107,27 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'This is some descriptive text about the image.',
+                    widget.vehicleSubCatResponseData.name??'',
                     style: TextStyle(fontSize: 16), // Changed to 16
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Vehicle Name',
+                    widget.vehicleSubCatResponseData.engineNumber??'',
                     style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'This is some descriptive text about the image.',
-                    style: TextStyle(fontSize: 16), // Changed to 16
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Engine Number',
+                    widget.vehicleSubCatResponseData.amount??'',
                     style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'This is some descriptive text about the image.',
-                    style: TextStyle(fontSize: 16), // Changed to 16
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Amount",
-                    style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.bold), // Changed to 13.5
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'This is some descriptive text about the image.',
-                    style: TextStyle(fontSize: 16), // Changed to 16
-                  ),
+
+
+
+
                   SizedBox(height: 10),
                   Text(
                     "Area",
@@ -151,30 +141,40 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                     style: TextStyle(fontSize: 16), // Changed to 16
                   ),
                   SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),color: Colors.black),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ), // Plus icon
-                              SizedBox(width: 8), // Space between icon and text
-                              Text(
-                                'Order',
-                                style: TextStyle(color: Colors.white),
-                              ), // Button text
-                            ],
+                  GestureDetector(
+                    onTap: ()async{
+                  if(   await Controller.addinquiry(widget.vehicleSubCatResponseData.code!)==1){
+                    Constant.toast(context, "enquiry added");
+                  }else{
+                    Constant.toast(context, "enquiry unable to add");
+                  }
+
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),color: Colors.black),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ), // Plus icon
+                                SizedBox(width: 8), // Space between icon and text
+                                Text(
+                                  'Order',
+                                  style: TextStyle(color: Colors.white),
+                                ), // Button text
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   // _address
 

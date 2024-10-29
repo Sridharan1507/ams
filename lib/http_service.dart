@@ -100,7 +100,7 @@ String processedUrl = resource.url!;
       final response = await http.post(uri,
           body: jsonEncode(resource.body), headers: headers);
       log("url $uri");
-      log("response code ${response.statusCode}");
+      log("response code ${token}");
       log("response body ${response.body}");
       if (response.statusCode == 100) {
         return buildTokenExpiredNavigator(resource);

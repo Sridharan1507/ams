@@ -1,6 +1,7 @@
 import 'package:ams/bloc/vehicle/vehicle_bloc.dart';
 import 'package:ams/bloc/vehicle/vehicle_event.dart';
 import 'package:ams/bloc/vehicle/vehicle_state.dart';
+import 'package:ams/model/vehicle/get_vechiles.dart';
 import 'package:ams/model/vehicle/vehicle_sub_cat.dart';
 import 'package:ams/screens/vehicles/order_vehicle_screen.dart';
 import 'package:ams/theme/theme.dart';
@@ -79,12 +80,14 @@ class _ImageGridState extends State<ImageGrid> {
   ];
   String subCatCode = '';
   VehicleBloc vehicleBloc = VehicleBloc();
+  VehicleBloc vehicleBloc2 = VehicleBloc();
   List<VehicleSubCatResponseData> itemsinve = [];
 
   @override
   void initState() {
     // TODO: implement initState
     vehicleBloc.add(GetVehicleSubCategoryEvent());
+    vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "12.971600,77.594600")));
     super.initState();
   }
 
@@ -94,6 +97,19 @@ class _ImageGridState extends State<ImageGrid> {
     } else if (state is GetVehicleSubCategoryLoadedState) {
       // _toast(context, "GetVehicleSubCategoryLoadedState Got");
       itemsinve = state.vehicleSubCatResponseData!;
+      print("itemsinve ${itemsinve.length}");
+      print("itemsinve ${itemsinve.map((e) => e.name)}");
+    } else if (state is GetVehicleSubCategoryErrorState) {
+      print('GetVehicleSubCategoryErrorState');
+      // _toast(context, state.error);
+    }
+  }
+  _listenerGetUserBloc2(context, state) {
+    if (state is GetVehicleSubCategoryLoadingState) {
+      print('GetVehicleSubCategoryLoadingState');
+    } else if (state is GetAllVechilesLoadedState) {
+      // _toast(context, "GetVehicleSubCategoryLoadedState Got");
+      state.getAllVehiclesResponseData!;
       print("itemsinve ${itemsinve.length}");
       print("itemsinve ${itemsinve.map((e) => e.name)}");
     } else if (state is GetVehicleSubCategoryErrorState) {
@@ -190,7 +206,14 @@ class _ImageGridState extends State<ImageGrid> {
                 }
                 return const Text("user not yet");
               }),
-          Expanded(
+    BlocConsumer<VehicleBloc, VehicleState>(
+    listener: (context, state) {
+    _listenerGetUserBloc(context, state);
+    },
+    bloc: vehicleBloc2,
+    builder: (context, VehicleState state) {
+    if (state is GetAllVechilesLoadedState) {
+    return      Expanded(
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, // 2 columns per row
@@ -198,7 +221,7 @@ class _ImageGridState extends State<ImageGrid> {
                 crossAxisSpacing: 8.0, // Space between columns
                 mainAxisSpacing: 8.0, // Space between rows
               ),
-              itemCount: items.length,
+              itemCount: state.getAllVehiclesResponseData.vechileList?.length??0,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -206,7 +229,7 @@ class _ImageGridState extends State<ImageGrid> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                HalfImageHalfTextScreen()));
+                                HalfImageHalfTextScreen(vehicleSubCatResponseData: state.getAllVehiclesResponseData.vechileList![index],)));
                   },
                   child: Card(
                     surfaceTintColor: Colors.grey.shade100,
@@ -217,7 +240,7 @@ class _ImageGridState extends State<ImageGrid> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            items[index]['title'] ?? '',
+                            state.getAllVehiclesResponseData.vechileList![index].name??'',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -230,7 +253,7 @@ class _ImageGridState extends State<ImageGrid> {
                               borderRadius: BorderRadius.circular(
                                   8), // Rounded corners (optional)
                               image: DecorationImage(
-                                image: AssetImage(items[index]['image'] ?? ''),
+                                image: AssetImage(items[0]['image'] ?? ''),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -239,7 +262,7 @@ class _ImageGridState extends State<ImageGrid> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            items[index]['description'] ?? '',
+                            state.getAllVehiclesResponseData.vechileList![index].amount??'',
                             style: const TextStyle(fontSize: 14),
                           ),
                         ),
@@ -249,7 +272,9 @@ class _ImageGridState extends State<ImageGrid> {
                 );
               },
             ),
-          ),
+          );}
+    return const SizedBox();
+    }),
         ],
       ),
     );

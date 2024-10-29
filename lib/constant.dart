@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 const kPrimaryBackgroundColor = Color(0xFFFFFFFF);
 const kPrimaryColor = Color(0xFF008C45);
@@ -17,10 +18,11 @@ class Constant {
   static String userRegister='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register';
   static String getUser='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-user';
   static String getAllUsers='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-all-users';
-  static String getvehicles='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get_vehicles';
+  static String getvehicles='https://rljzs2n.localto.net/vehicle_rent/appApiv1/get_vehicles';
   static String getvehicleCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-category';
   static String getvehicleSubCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-sub-category';
   static String addVechile='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register-vehicle';
+  static String useraddenquiry='https://rljzs2n.localto.net/vehicle_rent/appApiv1/add-enquiry/';
 
   //region Defaults
 
@@ -168,5 +170,25 @@ class Constant {
   static Color? textGoldColor = const Color(0xffD7AF0D);
   static Color? textPinkColor = const Color(0xffFF70AC);
   static Color? textWhiteColor = const Color(0xffFFFFFF);
+ static void toast(BuildContext context, String errDesc,{Color? colour}) async {
+    await Future.delayed(const Duration(microseconds: 1));
+    if (WidgetsBinding.instance.window.viewInsets.bottom > 0.0) {
+      FocusScope.of(context).requestFocus(FocusNode());
+    }
+    showToast(errDesc,
+        textStyle:
+        TextStyle(fontSize: 15.0, color: Constant.textColorExtraLight),
+        context: context,
+        backgroundColor:colour,
+        animation: StyledToastAnimation.slideFromBottom,
+        reverseAnimation: StyledToastAnimation.slideToBottom,
+        startOffset: const Offset(0.0, 3.0),
+        reverseEndOffset: const Offset(0.0, 3.0),
+        position: StyledToastPosition.bottom,
+        duration: const Duration(seconds: 4),
+        animDuration: const Duration(seconds: 1),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.fastOutSlowIn);
+  }
 //endregion
 }
