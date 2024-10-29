@@ -15,6 +15,8 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   VehicleBloc() : super(GetAllVechilesInitilState()) {
     on<GetAllVechiclesEvent>(getAllVehicles);
     on<GetVehicleCategoryEvent>(getvehicleCategory);
+    on<AddVehicleEvent>(addVehicle);
+    on<GetVehicleSubCategoryEvent>(getvehiclesubCategory);
   }
 }
 
@@ -54,3 +56,41 @@ void getvehicleCategory(
     emit(GetVehicleCategoryErrorState(ex.toString()));
   }
 }
+
+void getvehiclesubCategory(
+    GetVehicleSubCategoryEvent event, Emitter<VehicleState> emit) async {
+  // try {
+    emit(GetVehicleSubCategoryLoadingState());
+
+    final data = await APIWeb().get(VehicleRepo.getvehicleSubCategory());
+
+    if (data is ErrResponse) {
+      // log(data.toString());
+      emit(GetVehicleSubCategoryErrorState(data.message!));
+    } else {
+      emit(GetVehicleSubCategoryLoadedState(data));
+    }
+  // } catch (ex) {
+  //   emit(GetVehicleCategoryErrorState(ex.toString()));
+  // }
+}
+
+
+void addVehicle(
+    AddVehicleEvent event, Emitter<VehicleState> emit) async {
+  // try {
+    emit(AddVehicleLoadingState());
+
+    final data = await APIWeb()
+        .post(VehicleRepo.addVehicle(event.addVehicleRequestBody));
+
+    if (data is ErrResponse) {
+      log(data.toString());
+      emit(AddVehicleErrorState(data.message!));
+    } else {
+      emit(AddVehicleLoadedState(data));
+    }
+  } 
+  // catch (ex) {
+  //   emit(AddVehicleErrorState(ex.toString()));
+  // }

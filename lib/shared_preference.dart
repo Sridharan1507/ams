@@ -4,9 +4,10 @@ class SharedPreference {
   static const String guestAuthTokenKey = "GUEST_AUTH_TOKEN_KEY";
   static const String sessionIdKey = "SESSION_ID";
   static const String isLoggedInKey = "IS_LOGGED";
-  static const String mobileNumberKey = "MOBILE_NUMER";
+  static const String userNameKey = "USER_NAME";
   static const String sessionIdleKey = "SESSION_IDLE_TIME";
   static const String accountSessionLogInfo = "ACCOUNT_SESSION_LOG_INFO";
+   static const String password = "PASSWORD";
 
   static Future<String> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -18,12 +19,22 @@ class SharedPreference {
     prefs.setString(guestAuthTokenKey, token);
   }
 
-  static Future<String> getSessionId() async {
+    static Future<String> getPassword() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(password) ?? '';
+  }
+
+  static savePassword(String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(password, password);
+  }
+
+  static Future<String> getSessionToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(sessionIdKey) ?? '';
   }
 
-  static saveSessionId(String token) async {
+  static saveSessionToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(sessionIdKey, token);
   }
@@ -48,14 +59,14 @@ class SharedPreference {
     prefs.setBool(isLoggedInKey, isLogged);
   }
 
-  static Future<String> getMobileNumber() async {
+  static Future<String> getUserName() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(mobileNumberKey) ?? '';
+    return prefs.getString(userNameKey) ?? '';
   }
 
-  static setMobileNumber(String mobileNum) async {
+  static setUserName(String userName) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(mobileNumberKey, mobileNum);
+    prefs.setString(userNameKey, userName);
   }
 
   static logout() async {
@@ -73,10 +84,11 @@ class SharedPreference {
     prefs.setString(accountSessionLogInfo, token);
   }
 
-  static login(String authToken, String sessionId, String mobileNum) async {
-    saveAuthToken(authToken);
-    saveSessionId(sessionId);
+  static login({String? authToken, String? sessionId, String? userNmae,String? password}) async {
+    saveAuthToken(authToken??"");
+    saveSessionToken(sessionId??"");
     saveIsLogged(true);
-    setMobileNumber(mobileNum);
+    setUserName(userNmae??"");
+    savePassword(password??"");
   }
 }

@@ -1,19 +1,19 @@
-import 'dart:convert';
-import 'dart:developer';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:ams/model/user_register.dart';
+import 'package:ams/bloc/auth/auth_event.dart';
+import 'package:ams/bloc/user/user_bloc.dart';
+import 'package:ams/bloc/user/user_event.dart';
+import 'package:ams/bloc/user/user_state.dart';
+import 'package:ams/model/auth_respose.dart';
+import 'package:ams/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ams/bloc/auth/auth_bloc.dart';
-import 'package:ams/bloc/auth/auth_event.dart';
 import 'package:ams/bloc/auth/auth_state.dart';
 import 'package:ams/constant.dart';
-import 'package:ams/http_service.dart';
-import 'package:ams/model/auth_respose.dart';
-import 'package:ams/repo/auth/login_repo.dart';
 import 'package:ams/screens/home/machine_configurator.dart';
 import 'package:ams/theme/theme.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -23,15 +23,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
- 
-   TextEditingController UserNameTextEditingController = TextEditingController();
-  
+  TextEditingController userNameTextEditingController = TextEditingController();
+
   TextEditingController passwordTextEditingController = TextEditingController();
- 
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? usernameErrorMessage;
+
   AuthBloc authBloc = AuthBloc();
+  UserBloc userBloc = UserBloc();
   @override
   void initState() {
     super.initState();
@@ -43,8 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget buildLoginForm() {
-    return BlocProvider(
-      create: (context) => AuthBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthBloc()),
+        BlocProvider(create: (context) => UserBloc())
+      ],
+      // : (context) => AuthBloc(),
       child: Scaffold(
         appBar: AppBar(
             leading: IconButton(
@@ -60,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Expanded(
                     child:
-                        Text('LogIn', style: TextStyle(color: Colors.black))),
+                        Text('Log In', style: TextStyle(color: Colors.black))),
               ],
             )),
         body: SafeArea(
@@ -83,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Column(
         children: [
-           Column(
+          Column(
             children: [
               Row(
                 children: [
@@ -106,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               TextFormField(
-                controller: UserNameTextEditingController,
+                controller: userNameTextEditingController,
                 showCursor: true,
                 style: Theme.of(context).custom().textBody5_Light_M,
                 decoration: InputDecoration(
@@ -134,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-            Column(
+          Column(
             children: [
               Row(
                 children: [
@@ -188,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-             ],
+        ],
       ),
     );
   }
@@ -225,55 +228,112 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget buildLoginButton() {
     return Column(
       children: [
-        buildBloc(),
-      
+        buildAuthBlocWidget(),
+        buildUserBlocWidget(),
         buildElevatedButtonMedium("Login", Constant.buttonNegativeOkColor,
             Constant.buttonColorDark, Constant.buttonColorDark, () async {
+//  Navigator.of(context).push(MaterialPageRoute(
+//           builder: (BuildContext context) =>
+//                MachineConfiguratorScreen( getUserResponseData: null)));
 
+          if (userNameTextEditingController.text.isEmpty) {
+            _toast(context, "Please Enter User name");
+          } else if (passwordTextEditingController.text.isEmpty) {
+            _toast(context, "Plaese enter Password");
+          } else {
+            AuthRequest authRequest = AuthRequest(
+                userName: userNameTextEditingController.text.trim(),
+                password: passwordTextEditingController.text.trim());
 
-         Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                         MachineConfiguratorScreen()));
-                 
+            authBloc.add(GetAuthTokenEvent(authRequest));
+          }
         })
       ],
     );
   }
 
-  Widget buildBloc() {
-    return BlocBuilder<AuthBloc, AuthState>(
+  void _toast(BuildContext context, String errDesc) async {
+    await Future.delayed(const Duration(microseconds: 1));
+    if (WidgetsBinding.instance.window.viewInsets.bottom > 0.0) {
+      FocusScope.of(context).requestFocus(FocusNode());
+    }
+    showToast(errDesc,
+        textStyle:
+            TextStyle(fontSize: 15.0, color: Constant.textColorExtraLight),
+        context: context,
+        backgroundColor: Colors.red,
+        animation: StyledToastAnimation.slideFromBottom,
+        reverseAnimation: StyledToastAnimation.slideToBottom,
+        startOffset: const Offset(0.0, 3.0),
+        reverseEndOffset: const Offset(0.0, 3.0),
+        position: StyledToastPosition.bottom,
+        duration: const Duration(seconds: 4),
+        animDuration: const Duration(seconds: 1),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.fastOutSlowIn);
+  }
+
+  _listenerGetTicketDetailsBloc(context, state) {
+    if (state is GetAuthTokenLoadingState) {
+      print('GetAuthTokenLoadingState');
+    } else if (state is GetAuthTokenLoadedState) {
+      print('GetAuthTokenLoadedState');
+      if (state.authResponse != null) {
+              SharedPreference.login(
+                  authToken: state.authResponse![0].accessToken.toString(),
+                  sessionId: state.authResponse![0].sessionToken.toString(),
+                  userNmae: userNameTextEditingController.text.trim(),
+                  password: passwordTextEditingController.text.trim());
+            }
+      userBloc.add(GetUserEvent());
+      // Navigator.of(context).push(MaterialPageRoute(
+      //     builder: (BuildContext context) =>
+      //          MachineConfiguratorScreen()));
+    } else if (state is GetAuthTokenErrorState) {
+      print('GetAuthToken Error');
+      _toast(context, state.error);
+    }
+  }
+
+    _listenerGetUserBloc(context, state) {
+    if (state is GetUserLoadingState) {
+      print('Get User loading');
+    } else if (state is GetUserLoadedState) {
+      _toast(context, "User Got");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) =>
+               MachineConfiguratorScreen( getUserResponseData: state.getUserResponseData![0])));
+    } else if (state is GetUserErrorState) {
+      print('Get user eeor Error');
+      _toast(context, state.error);
+    }
+  }
+
+  Widget buildAuthBlocWidget() {
+    return BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          _listenerGetTicketDetailsBloc(context, state);
+        },
         bloc: authBloc,
-        builder: (BuildContext context, state) {
-          if (state is GetAuthTokenLoadingState) {
-            print('GetAuthTokenLoadingState');
+        builder: (context, AuthState state) {
+          if (state is GetAuthTokenLoadedState) {
+            return const Text("Loaded");
           }
-          else if (state is GetAuthTokenLoadedState) {
-            print('GetAuthTokenLoadedState');
-            return Text("Loaded");
-          }
-          return Text("not yet");
+          return const Text("not yet");
         });
   }
 
-  String calculateSeatAvailabilityPercentage(
-      int bookedSeatCount, int totalSeatCount) {
-    double per = ((bookedSeatCount / totalSeatCount) * 100);
-    return (!per.isInfinite) && per > 0 ? "(${per.toStringAsFixed(2)}%)" : "";
-  }
-}
-
-class UserNameCheck {
-  String? username;
-
-  UserNameCheck({this.username});
-
-  UserNameCheck.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['username'] = this.username;
-    return data;
+  Widget buildUserBlocWidget() {
+    return BlocConsumer<UserBloc, UserState>(
+        listener: (context, state) {
+          _listenerGetUserBloc(context, state);
+        },
+        bloc: userBloc,
+        builder: (context, UserState state) {
+          if (state is GetUserLoadedState) {
+            return const Text("user Loaded");
+          }
+          return const Text("user not yet");
+        });
   }
 }

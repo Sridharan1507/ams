@@ -83,3 +83,27 @@ class RegenTokenErrorState extends AuthState {
   @override
   List<Object?> get props => [error];
 }
+
+
+class UserRegistrationLoadingState extends AuthState {
+  @override
+  List<Object?> get props => [];
+}
+
+class UserRegistrationLoadedState extends AuthState {
+  final List<AuthResponseData>? authResponse;
+
+  UserRegistrationLoadedState(this.authResponse);
+
+  @override
+  List<Object?> get props => [authResponse];
+}
+
+class UserRegistrationErrorState extends AuthState {
+  final String error;
+
+  UserRegistrationErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}

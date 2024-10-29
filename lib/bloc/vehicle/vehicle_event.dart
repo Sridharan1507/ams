@@ -1,3 +1,4 @@
+import 'package:ams/model/vehicle/add_vechiles.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ams/model/auth_respose.dart';
 import 'package:ams/model/change_password.dart';
@@ -21,3 +22,19 @@ class GetVehicleCategoryEvent extends VehicleEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AddVehicleEvent extends VehicleEvent {
+  final AddVehicleRequestBody addVehicleRequestBody;
+  AddVehicleEvent(this.addVehicleRequestBody);
+
+  @override
+  List<Object?> get props => [addVehicleRequestBody];
+}
+
+class GetVehicleSubCategoryEvent extends VehicleEvent {
+  GetVehicleSubCategoryEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+

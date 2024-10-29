@@ -1,3 +1,4 @@
+import 'package:ams/model/user_register.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ams/model/auth_respose.dart';
 import 'package:ams/model/change_password.dart';
@@ -24,6 +25,16 @@ class GetAuthTokenEvent extends AuthEvent {
   List<Object?> get props =>
       [authrequest];
 }
+class UserRegistrationEvent extends AuthEvent {
+  final UserRegisterRequestBody userRegisterRequestBody;
+
+  UserRegistrationEvent(this.userRegisterRequestBody);
+
+  @override
+  List<Object?> get props =>
+      [userRegisterRequestBody];
+}
+
 
 class ChangePasswordEvent extends AuthEvent {
   final ChangePasswordRequestBody changePasswordRequestBody;

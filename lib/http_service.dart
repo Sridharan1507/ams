@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:ams/constant.dart';
+import 'package:ams/model/regen_token.dart';
+import 'package:ams/repo/auth/login_repo.dart';
+import 'package:ams/shared_preference.dart';
 import 'package:http/http.dart' as http;
 
 String token = '';
@@ -17,58 +21,57 @@ class HttpService<T> {
 
 class APIWeb {
   static authenticateUrl(String url) async {
-    // if (url.contains("<AUTH_TOKEN>")) {
-    //   String sessionIdleTime = await SharedPreference.getSessionIdleTime();
-    //   token = await SharedPreference.getAuthToken();
-    //   int diff = 0;
 
-    //   if (sessionIdleTime.isNotEmpty) {
-    //     diff = DateTime.now()
-    //             .difference(DateTime.parse(sessionIdleTime))
-    //             .inMinutes %
-    //         60;
-    //   }
+    String sessionToken = await SharedPreference.getSessionToken();
+    print("session token before $sessionToken");
+    if (url != Constant.getAuth && url != Constant.userRegister) {  
 
-    //   if (token.isEmpty || diff > 30) {
-    //     SharedPreference.saveUserSessionInfo("");
-    //     getAccountSessionLog();
-    //     url = "";
-    //   } else {
-    //     url = url.replaceAll("<AUTH_TOKEN>", token);
-    //   }
-    // }
+      RegenTokenRequestBody regenTokenRequestBody =
+          RegenTokenRequestBody(sessionToken: sessionToken);
+      final data =
+          await APIWeb().post(AuthRepoClass.regenToken(regenTokenRequestBody));
+      String authToken = data.authResponse![0].accessToken.toString();
+      sessionToken = data.authResponse![0].sessionToken.toString();
+      await SharedPreference.saveAuthToken(authToken);
+      await SharedPreference.saveSessionToken(sessionToken);
+    }
+    print("URL IS $url");
 
-   
+    print("session token after $sessionToken");
 
     return url;
   }
 
   Future<T> get<T>(HttpService<T> resource) async {
-    Map<String, String> headers = {
-      "localtonet-skip-warning": "true",
-    };
-    String processedUrl = await authenticateUrl(resource.url!);
+    String token = await SharedPreference.getAuthToken();
+    print("token $token");
+    Map<String, String> headers = {};
+
+    // String processedUrl = await authenticateUrl(resource.url!);
+String processedUrl = resource.url!;
+ log("processed Url $processedUrl");
     if (processedUrl.isNotEmpty) {
+      if (processedUrl != Constant.getAuth ||
+          processedUrl != Constant.regenToken) {
+        headers = {"localtonet-skip-warning": "true", "Token": token};
+      } else {
+        headers = {"localtonet-skip-warning": "true"};
+      }
+
       final uri = Uri.parse(processedUrl);
+
       final response = await http.get(uri, headers: headers);
-      log("url ${uri}");
-      // log("full json ${response.body}");
+      log("url $uri");
+      log("full json ${response.body}");
       if (response.statusCode == 100) {
         return buildTokenExpiredNavigator(resource);
-      } else if (response.statusCode == 200) {
+      } else if (response.statusCode == 200|| response.statusCode == 401) {
         var responseJson = json.decode(response.body);
-        //  SharedPreference.saveAuthToken()
-
         dynamic res;
-        if (responseJson['status'] == 1) {
+        if (responseJson['status'] == true) {
           res = resource.parse!(BaseResponse.fromJSON(responseJson));
-        } else if (responseJson['status'] == 0) {
-          if (responseJson['errorCode'] == 100 ||
-              responseJson['errorCode'] == "100") {
-            return buildTokenExpiredNavigator(resource);
-          } else {
+        } else if (responseJson['status'] == false) {
             res = resource.errparse!(ErrResponse.fromJSON(responseJson));
-          }
         }
 
         return res;
@@ -81,42 +84,41 @@ class APIWeb {
   }
 
   Future<T> post<T>(HttpService<T> resource) async {
-    String processedUrl = await authenticateUrl(resource.url!);
+  String token = await SharedPreference.getAuthToken();
+    Map<String, String> headers = {};
 
-  
-
-     Map<String, String> headers = {
-      "localtonet-skip-warning": "true",  
-    };
+    // String processedUrl = await authenticateUrl(resource.url!);
+String processedUrl = resource.url!;
     if (processedUrl.isNotEmpty) {
+      if (processedUrl != Constant.getAuth ||
+          processedUrl != Constant.regenToken) {
+        headers = {"localtonet-skip-warning": "true", "Token": token};
+      } else {
+        headers = {"localtonet-skip-warning": "true"};
+      }
       final uri = Uri.parse(processedUrl);
       final response = await http.post(uri,
           body: jsonEncode(resource.body), headers: headers);
-      log("url ${uri}");
-      // log("response code ${response.body}");
+      log("url $uri");
       log("response code ${response.statusCode}");
-       log("response body ${response.body}");
+      log("response body ${response.body}");
       if (response.statusCode == 100) {
         return buildTokenExpiredNavigator(resource);
-      } else if (response.statusCode == 200) {
+      } else if (response.statusCode == 200 || response.statusCode == 401) {
         dynamic res;
         var responseJson = json.decode(response.body);
         if (responseJson['data'] == null && responseJson['status'] == true) {
           res = resource.parse!(BaseResponse.fromJSON(responseJson));
-        } else if (responseJson['status'] == 1) {
+        } else if (responseJson['status'] == true) {
           res = resource.parse!(BaseResponse.fromJSON(responseJson));
         } else if (responseJson['status'] == null) {
           res = resource.parse!(BaseResponse.fromJSON(responseJson));
-        } else if (responseJson['status'] == 0) {
-          if (responseJson['errorCode'] == 100 ||
-              responseJson['errorCode'] == "100") {
-            return buildTokenExpiredNavigator(resource);
-          } else {
-            res = resource.errparse!(ErrResponse.fromJSON(responseJson));
-          }
+        } else if (responseJson['status'] == false) {
+          res = resource.errparse!(ErrResponse.fromJSON(responseJson));
         }
         return res;
-      } else {
+      }
+       else {
         throw Exception(response.statusCode);
       }
     } else {
@@ -124,19 +126,14 @@ class APIWeb {
     }
   }
 
-  buildTokenExpiredNavigator(dynamic resource) {
-   
+  buildTokenExpiredNavigator(dynamic resource) {}
 
-  
-}
-
- buildTokenExpiredErrorResponse(dynamic resource) {
+  buildTokenExpiredErrorResponse(dynamic resource) {
     return resource.errparse!(ErrResponse(
       status: 0,
       message: "Session expired, Please login again to continue.",
     ));
   }
-
 }
 
 class BaseResponse {
@@ -167,8 +164,7 @@ class ErrResponse {
   final String? message;
   final dynamic data;
 
-  ErrResponse(
-      {this.status, this.message, this.data});
+  ErrResponse({this.status, this.message, this.data});
 
   //mapping json data
   factory ErrResponse.fromJSON(Map<String, dynamic> jsonMap) {

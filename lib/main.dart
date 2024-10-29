@@ -1,15 +1,27 @@
-import 'dart:convert';
-
+// ignore_for_file: deprecated_member_use
+import 'package:ams/screens/home/machine_configurator.dart';
+import 'package:ams/screens/splash_screen.dart';
+import 'package:ams/screens/vehicles/order_vehicle_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ams/screens/login/sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); 
    BlocOverrides.runZoned(() => runApp(const MyApp()),
       blocObserver: SimpleBlocObserver());
-  
+   FlutterError.onError = (FlutterErrorDetails details) {
+   FlutterError.presentError(details);
+  };
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+   return Scaffold(
+     appBar: AppBar(
+       backgroundColor: Colors.red,
+       title: const Text('An error occurred'),
+     ),
+     body: Center(child: Text(details.toString())),
+   );
+  };
 }
 
 class MyApp extends StatelessWidget {
@@ -19,28 +31,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'AMS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home:  SplashScreen(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -54,11 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const SignInScreen()));
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }

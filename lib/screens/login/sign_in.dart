@@ -1,3 +1,5 @@
+import 'package:ams/screens/home/machine_configurator.dart';
+import 'package:ams/screens/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:ams/constant.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -33,16 +35,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
             )),
-        Positioned.fill(
+        const Positioned.fill(
             child: Padding(
-          padding: const EdgeInsets.only(top: 150.0),
+          padding: EdgeInsets.only(top: 150.0),
           child: Align(
             alignment: Alignment.topCenter,
             child: Text("AMB",
                 style:
                 //  GoogleFonts.prociono(
                 //     textStyle: 
-                    const TextStyle(
+                    TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.w500,
                         color: Colors.black))
@@ -67,7 +69,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       onTap: (){
                        Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) =>
-                         SignUpScreen()));
+                         const SignUpScreen()));
+
+                    //      Navigator.of(context).push(MaterialPageRoute(
+                    // builder: (BuildContext context) =>
+                    //      const MachineConfiguratorScreen()));
                  
                       },
                       child: Container(
@@ -78,27 +84,38 @@ class _SignInScreenState extends State<SignInScreen> {
                             borderRadius: BorderRadius.horizontal(
                                 right: Radius.circular(40),
                                 left: Radius.circular(40))),
-                        child: Center(child: Text("SIGN UP",style:
+                        child: const Center(child: Text("SIGN UP",style:
                         // GoogleFonts.sourceCodePro(textStyle:
-                        const TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w600,),) )
+                        TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w600,),) )
                         //  ),
                       ),
                     ),
                     const SizedBox(height: 20,),
-                    Container(
-                       width: 300,
-                       height: 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black,width: 1),
-                        color: Colors.grey.shade200,
-                          borderRadius: const BorderRadius.horizontal(
-                              right: Radius.circular(40),
-                              left: Radius.circular(40))),
-                      child: Center(child: Text("LOGIN",style: 
-                      // GoogleFonts.sourceCodePro(textStyle:
-                      const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis,
-                      ),)
-                      // ),
+                    GestureDetector(
+                      onTap: (){
+                         Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                         const LoginScreen()));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    // builder: (BuildContext context) =>
+                    //      const MachineConfiguratorScreen()));
+                        
+                      },
+                      child: Container(
+                         width: 300,
+                         height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black,width: 1),
+                          color: Colors.grey.shade200,
+                            borderRadius: const BorderRadius.horizontal(
+                                right: Radius.circular(40),
+                                left: Radius.circular(40))),
+                        child: const Center(child: Text("LOGIN",style: 
+                        // GoogleFonts.sourceCodePro(textStyle:
+                        TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis,
+                        ),)
+                        // ),
+                      ),
                     )
                   ],
                 )),

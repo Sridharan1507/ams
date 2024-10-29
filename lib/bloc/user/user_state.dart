@@ -1,3 +1,4 @@
+import 'package:ams/model/get_user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ams/model/auth_respose.dart';
 
@@ -17,12 +18,12 @@ class GetUserLoadingState extends UserState {
 }
 
 class GetUserLoadedState extends UserState {
-  final List<AuthResponseData>? authResponse;
+  final  List<GetUserResponseData>? getUserResponseData;
 
-  GetUserLoadedState(this.authResponse);
+  GetUserLoadedState(this.getUserResponseData);
 
   @override
-  List<Object?> get props => [authResponse];
+  List<Object?> get props => [getUserResponseData];
 }
 
 class GetUserErrorState extends UserState {

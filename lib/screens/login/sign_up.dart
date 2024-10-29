@@ -1,19 +1,17 @@
 import 'dart:convert';
-import 'dart:developer';
 
+import 'package:ams/bloc/auth/auth_event.dart';
 import 'package:ams/model/user_register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ams/bloc/auth/auth_bloc.dart';
-import 'package:ams/bloc/auth/auth_event.dart';
 import 'package:ams/bloc/auth/auth_state.dart';
 import 'package:ams/constant.dart';
-import 'package:ams/http_service.dart';
-import 'package:ams/model/auth_respose.dart';
-import 'package:ams/repo/auth/login_repo.dart';
 import 'package:ams/screens/home/machine_configurator.dart';
 import 'package:ams/theme/theme.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:intl/intl.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -24,14 +22,12 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController nameTextEditingController = TextEditingController();
-   TextEditingController UserNameTextEditingController = TextEditingController();
-    TextEditingController genderTextEditingController = TextEditingController();
-     TextEditingController dobTextEditingController = TextEditingController();
-  TextEditingController emailTextEditingController =
-      TextEditingController();
+  TextEditingController userNameTextEditingController = TextEditingController();
+  TextEditingController genderTextEditingController = TextEditingController();
+  TextEditingController dobTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
-  TextEditingController mobileTextEditingController =
-      TextEditingController();
+  TextEditingController mobileTextEditingController = TextEditingController();
   TextEditingController addressTextEditingController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -82,13 +78,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+  DateTime selectedDate = DateTime.now();
+    Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day + 90, 0, 0, 0));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  String busDateFormat(DateTime date) {
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  final String formatted = formatter.format(date);
+  return formatted;
+}
 
   Widget buildVehicleDriverForm() {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Column(
         children: [
-           Column(
+          Column(
             children: [
               Row(
                 children: [
@@ -139,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ],
           ),
-           Column(
+          Column(
             children: [
               Row(
                 children: [
@@ -162,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
               TextFormField(
-                controller: UserNameTextEditingController,
+                controller: userNameTextEditingController,
                 showCursor: true,
                 style: Theme.of(context).custom().textBody5_Light_M,
                 decoration: InputDecoration(
@@ -190,7 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ],
           ),
-           Column(
+          Column(
             children: [
               Row(
                 children: [
@@ -241,7 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ],
           ),
-           Column(
+          Column(
             children: [
               Row(
                 children: [
@@ -263,6 +279,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ],
               ),
+
+      //         GestureDetector(
+      //           onTap: () => _selectDate(context),
+      //           child: Container(
+      // padding: EdgeInsets.symmetric(horizontal: 16.0),
+      // decoration: BoxDecoration(
+      //   border: Border.all(color: Colors.grey), // Border color
+      //   borderRadius: BorderRadius.circular(8.0), // Rounded corners
+      // ),
+      //             child: RichText(
+      //                     text: TextSpan(
+      //                       children: [
+      //                         TextSpan(
+      //                             text: "${busDateFormat(selectedDate)} ",
+      //                             style: const TextStyle(
+      //                                 fontSize: 15.0,
+      //                                 color: Colors.black)),
+                           
+      //                       ],
+      //                     ),
+      //                   ),
+      //           ),
+      //         ),
+              
               TextFormField(
                 controller: dobTextEditingController,
                 showCursor: true,
@@ -527,19 +567,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       children: [
         buildBloc(),
-      
         buildElevatedButtonMedium("Save", Constant.buttonNegativeOkColor,
             Constant.buttonColorDark, Constant.buttonColorDark, () async {
+          if (nameTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Name");
+          } else if (userNameTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter User Name");
+          } else if (emailTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Email");
+          } else if (passwordTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Password");
+          } else if (mobileTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Mobile numer");
+          } else if (dobTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Date of Birth");
+          } else if (genderTextEditingController.text.isEmpty &&
+              (genderTextEditingController.text.trim() == "male" ||
+                  genderTextEditingController.text.trim() == "female")) {
+            _toast(context, "Please enter valid Gender");
+          } else if (addressTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Address");
+          } else {
+            UserRegisterRequestBody userRegisterRequestBody =
+                UserRegisterRequestBody(
+              name: nameTextEditingController.text.trim(),
+              userName: userNameTextEditingController.text.trim(),
+              email: emailTextEditingController.text.trim(),
+              password: passwordTextEditingController.text.trim(),
+              mobileNumber: mobileTextEditingController.text.trim(),
+              dob: dobTextEditingController.text.trim(),
+              gender: genderTextEditingController.text.trim(),
+              latitude: "NA",
+              longitude: "NA",
+              deviceToken: "",
+            );
+            authBloc.add(UserRegistrationEvent(userRegisterRequestBody));
+            print("${jsonEncode(userRegisterRequestBody)}");
+          }
 
-              // UserRegisterRequestBody userRegisterRequestBody=UserRegisterRequestBody();
-          // AuthRequest authRequest =
-          //     AuthRequest(userName: "haridas", password: "123456");
-          // authBloc.add(GetAuthTokenEvent(authRequest));
-
-         Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                         MachineConfiguratorScreen()));
-                 
+         
         })
       ],
     );
@@ -549,14 +615,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
         bloc: authBloc,
         builder: (BuildContext context, state) {
-          if (state is GetAuthTokenLoadingState) {
-            print('GetAuthTokenLoadingState');
+          if (state is UserRegistrationLoadingState) {
+            print('user loading');
+          } else if (state is UserRegistrationErrorState) {
+            print('UserReg error');
+             _toast(context, state.error);
+            return const Text("Loaded");
+          } else if (state is UserRegistrationLoadedState) {
+            print('user reg loaded');
+             Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => const MachineConfiguratorScreen()));
+            return const Text("Loaded");
           }
-          else if (state is GetAuthTokenLoadedState) {
-            print('GetAuthTokenLoadedState');
-            return Text("Loaded");
-          }
-          return Text("not yet");
+          return const Text("not yet");
         });
   }
 
@@ -567,18 +638,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 }
 
-class UserNameCheck {
-  String? username;
-
-  UserNameCheck({this.username});
-
-  UserNameCheck.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
+void _toast(BuildContext context, String errDesc) async {
+  await Future.delayed(const Duration(microseconds: 1));
+  if (WidgetsBinding.instance.window.viewInsets.bottom > 0.0) {
+    FocusScope.of(context).requestFocus(FocusNode());
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['username'] = this.username;
-    return data;
-  }
+  showToast(errDesc,
+      textStyle: TextStyle(fontSize: 15.0, color: Constant.textColorExtraLight),
+      context: context,
+      backgroundColor: Colors.red,
+      animation: StyledToastAnimation.slideFromBottom,
+      reverseAnimation: StyledToastAnimation.slideToBottom,
+      startOffset: const Offset(0.0, 3.0),
+      reverseEndOffset: const Offset(0.0, 3.0),
+      position: StyledToastPosition.bottom,
+      duration: const Duration(seconds: 4),
+      animDuration: const Duration(seconds: 1),
+      curve: Curves.elasticOut,
+      reverseCurve: Curves.fastOutSlowIn);
 }

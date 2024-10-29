@@ -14,6 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GetAuthTokenEvent>(getAuthToken);
     on<ChangePasswordEvent>(changePassword);
      on<RegenTokenEvent>(regenToken);
+     on<UserRegistrationEvent>(userReg);
   }
 }
 
@@ -69,4 +70,21 @@ void regenToken(RegenTokenEvent event, Emitter<AuthState> emit) async {
   } catch (ex) {
     emit(RegenTokenErrorState(ex.toString()));
   }
+}
+
+void userReg(UserRegistrationEvent event, Emitter<AuthState> emit) async {
+  // try {
+    emit(UserRegistrationLoadingState());
+
+    final data = await APIWeb().post(AuthRepoClass.userRegRepo(event.userRegisterRequestBody));
+
+    if (data is ErrResponse) {
+      log(data.toString());
+      emit(UserRegistrationErrorState(data.message!));
+    } else {
+      emit(UserRegistrationLoadedState(data));
+    }
+  // } catch (ex) {
+  //   emit(GetAuthTokenErrorState(ex.toString()));
+  // }
 }

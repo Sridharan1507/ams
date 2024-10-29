@@ -9,14 +9,18 @@ const kPrimaryAccentLightColor = Color(0xFFF5F8F1);
 class Constant {
   static String travelsName = "EzeeBus";
   static String splashlogo="lib/assets/images/pexels-aboodi-17366063.jpg"; 
+  static String splashlogo1="lib/assets/images/appstore.png"; 
   static String cartoon="lib/assets/images/beautiful-minimalist-landscape.jpg";
-  static String getAuth="https://9edd090bf1c04fa6bc116f1601ab2ca7.serveo.net/vehicle_rent/appApiv1/auth";
-  static String changePassword='';
-  static String regenToken='';
+  static String getAuth="http://rljzs2n.localto.net/vehicle_rent/appApiv1/auth";
+  static String changePassword='http://rljzs2n.localto.net/vehicle_rent/appApiv1change-password';
+  static String regenToken='http://rljzs2n.localto.net/vehicle_rent/appApiv1/refresh-token';
+  static String userRegister='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register';
   static String getUser='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-user';
   static String getAllUsers='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-all-users';
   static String getvehicles='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get_vehicles';
   static String getvehicleCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-category';
+  static String getvehicleSubCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-sub-category';
+  static String addVechile='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register-vehicle';
 
   //region Defaults
 
