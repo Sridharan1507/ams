@@ -1,6 +1,7 @@
 import 'package:ams/bloc/vehicle/vehicle_bloc.dart';
 import 'package:ams/bloc/vehicle/vehicle_event.dart';
 import 'package:ams/bloc/vehicle/vehicle_state.dart';
+import 'package:ams/model/vehicle/get_vechiles.dart';
 import 'package:ams/model/vehicle/vehicle_sub_cat.dart';
 import 'package:ams/screens/vehicles/order_vehicle_screen.dart';
 import 'package:ams/theme/theme.dart';
@@ -79,12 +80,14 @@ class _ImageGridState extends State<ImageGrid> {
   ];
   String subCatCode = '';
   VehicleBloc vehicleBloc = VehicleBloc();
+  VehicleBloc vehicleBloc2 = VehicleBloc();
   List<VehicleSubCatResponseData> itemsinve = [];
 
   @override
   void initState() {
     // TODO: implement initState
     vehicleBloc.add(GetVehicleSubCategoryEvent());
+    vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "12.971600,77.594600")));
     super.initState();
   }
 
@@ -94,6 +97,19 @@ class _ImageGridState extends State<ImageGrid> {
     } else if (state is GetVehicleSubCategoryLoadedState) {
       // _toast(context, "GetVehicleSubCategoryLoadedState Got");
       itemsinve = state.vehicleSubCatResponseData!;
+      print("itemsinve ${itemsinve.length}");
+      print("itemsinve ${itemsinve.map((e) => e.name)}");
+    } else if (state is GetVehicleSubCategoryErrorState) {
+      print('GetVehicleSubCategoryErrorState');
+      // _toast(context, state.error);
+    }
+  }
+  _listenerGetUserBloc2(context, state) {
+    if (state is GetVehicleSubCategoryLoadingState) {
+      print('GetVehicleSubCategoryLoadingState');
+    } else if (state is GetAllVechilesLoadedState) {
+      // _toast(context, "GetVehicleSubCategoryLoadedState Got");
+      state.getAllVehiclesResponseData!;
       print("itemsinve ${itemsinve.length}");
       print("itemsinve ${itemsinve.map((e) => e.name)}");
     } else if (state is GetVehicleSubCategoryErrorState) {

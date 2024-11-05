@@ -1,10 +1,18 @@
 
 import 'dart:convert';
 
+import 'package:ams/bloc/vehicle/vehicle_state.dart';
+import 'package:ams/constant.dart';
+import 'package:ams/model/vehicle/get_vechiles.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
+import '../../model/vehicle/vehicle_sub_cat.dart';
+import 'controller.dart';
+
 class HalfImageHalfTextScreen extends StatefulWidget {
+  final VechileList vehicleSubCatResponseData;
+  HalfImageHalfTextScreen({required this.vehicleSubCatResponseData});
   @override
   _HalfImageHalfTextScreenState createState() =>
       _HalfImageHalfTextScreenState();
@@ -38,51 +46,6 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
       return 'Failed to get address: $e';
     }
   }
-
-  void showCustomModalBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.30, // 3/4 of screen height
-        color: Colors.white,
-        padding: const EdgeInsets.all(16),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Payment process',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red),
-            ),
-            SizedBox(height: 12),
-            Text('For Order Confirmation and Payment Details, Contact this number',style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),),
-            
-            SizedBox(height: 8), Row(
-              children: [
-                Icon(Icons.call),
-                Padding(
-                  padding: EdgeInsets.only(left:4.0),
-                  child: Text('9043117008',style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),),
-                ),
-              ],
-            ),
-            
-            SizedBox(height: 6),  Row(
-              children: [
-                Icon(Icons.call),
-                Padding(
-                  padding: EdgeInsets.only(left:4.0),
-                  child: Text('9342504211',style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
 
   Future<void> _fetchAddress() async {
     // "lat": "12.971600",
@@ -152,49 +115,31 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'This is some descriptive text about the image.',
+                  SizedBox(height: 10),
+                  Text(
+                    widget.vehicleSubCatResponseData.name??'',
                     style: TextStyle(fontSize: 16), // Changed to 16
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Vehicle Name',
+                  SizedBox(height: 10),
+                  Text(
+                    widget.vehicleSubCatResponseData.engineNumber??'',
                     style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'This is some descriptive text about the image.',
-                    style: TextStyle(fontSize: 16), // Changed to 16
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Engine Number',
+                  SizedBox(height: 10),
+                  Text(
+                    widget.vehicleSubCatResponseData.amount??'',
                     style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'This is some descriptive text about the image.',
-                    style: TextStyle(fontSize: 16), // Changed to 16
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Amount",
-                    style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.bold), // Changed to 13.5
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'This is some descriptive text about the image.',
-                    style: TextStyle(fontSize: 16), // Changed to 16
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
+
+
+
+
+                  SizedBox(height: 10),
+                  Text(
                     "Area",
                     style: TextStyle(
                         fontSize: 13.5,
@@ -205,18 +150,23 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                     _address,
                     style: const TextStyle(fontSize: 16), // Changed to 16
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          showCustomModalBottomSheet( context);
-                        },
-                        child: Container(
-                          decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),color: Colors.black),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: ()async{
+                  if(   await Controller.addinquiry(widget.vehicleSubCatResponseData.code!)==1){
+                    Constant.toast(context, "enquiry added");
+                  }else{
+                    Constant.toast(context, "enquiry unable to add");
+                  }
+
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)),color: Colors.black),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -233,8 +183,8 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   // _address
 
