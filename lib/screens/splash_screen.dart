@@ -51,7 +51,8 @@ class SplashWidgetScreen extends State<SplashScreenFul> {
   getSession() async {
     String userName = await SharedPreference.getUserName();
     String password = await SharedPreference.getPassword();
-
+print("userName $userName");
+print("password $password");
     if (userName.isNotEmpty && password.isNotEmpty) {
       authBloc.add(
           GetAuthTokenEvent(AuthRequest(userName: userName, password: password)));
@@ -89,10 +90,10 @@ class SplashWidgetScreen extends State<SplashScreenFul> {
               userBloc.add(GetUserEvent());
             }
 
-            if (state is AuthInitialState) {
-              return _splash(context);
-              //debugPrint("Inside AuthInitialState");
-            }
+            // if (state is AuthInitialState) {
+            //   return _splash(context);
+            //   //debugPrint("Inside AuthInitialState");
+            // }
             if (state is GetAuthTokenLoadingState) {
               print('GetAuthTokenLoadingState');
             } else if (state is GetAuthTokenErrorState) {
@@ -105,7 +106,11 @@ class SplashWidgetScreen extends State<SplashScreenFul> {
                 },
                 bloc: userBloc,
                 builder: (context, UserState state) {
+                  if(state is UserRegistrationLoadedState){
+ return _splash(context);
+                  }
                   return _splash(context);
+                 
                 });
 
             // return _splash(context);

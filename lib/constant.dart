@@ -12,7 +12,7 @@ class Constant {
   static String splashlogo1="lib/assets/images/appstore.png"; 
   static String cartoon="lib/assets/images/beautiful-minimalist-landscape.jpg";
   static String getAuth="http://rljzs2n.localto.net/vehicle_rent/appApiv1/auth";
-  static String changePassword='http://rljzs2n.localto.net/vehicle_rent/appApiv1change-password';
+  static String changePassword='http://rljzs2n.localto.net/vehicle_rent/appApiv1/change-password';
   static String regenToken='http://rljzs2n.localto.net/vehicle_rent/appApiv1/refresh-token';
   static String userRegister='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register';
   static String getUser='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-user';

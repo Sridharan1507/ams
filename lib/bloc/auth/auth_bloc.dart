@@ -40,7 +40,7 @@ void changePassword(ChangePasswordEvent event, Emitter<AuthState> emit) async {
     emit(ChangePasswordLoadingState());
 
     final data = await APIWeb()
-        .get(AuthRepoClass.changePassword(event.changePasswordRequestBody));
+        .post(AuthRepoClass.changePassword(event.changePasswordRequestBody));
 
     if (data is ErrResponse) {
       log(data.toString());

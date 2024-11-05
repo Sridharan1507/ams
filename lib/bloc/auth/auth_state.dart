@@ -43,12 +43,12 @@ class ChangePasswordLoadingState extends AuthState {
 }
 
 class ChangePasswordLoadedState extends AuthState {
-  final List<AuthResponseData>? authResponse;
+  final String message;
 
-  ChangePasswordLoadedState(this.authResponse);
+  ChangePasswordLoadedState(this.message);
 
   @override
-  List<Object?> get props => [authResponse];
+  List<Object?> get props => [message];
 }
 
 class ChangePasswordErrorState extends AuthState {

@@ -20,19 +20,21 @@ class ChangePasswordRequestBody {
 class ChangePasswordResponse {
   bool? status;
   String? message;
-  // List<Null>? data;
+  List? data;
 
-  ChangePasswordResponse({this.status, this.message, });
+  ChangePasswordResponse({this.status, this.message, this.data });
 
   ChangePasswordResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    data=json['data'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
+    data['data']=data;
     return data;
   }
 }

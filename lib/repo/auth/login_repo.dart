@@ -28,8 +28,7 @@ class AuthRepoClass {
         });
   }
 
-
-    static userRegRepo(UserRegisterRequestBody userRegisterRequestBody) {
+  static userRegRepo(UserRegisterRequestBody userRegisterRequestBody) {
     return HttpService(
         url: Constant.userRegister,
         body: userRegisterRequestBody.toJson(),
@@ -54,7 +53,12 @@ class AuthRepoClass {
         body: changePasswordRequest.toJson(),
         parse: (response) {
           BaseResponse baseResponse = response;
-        
+          // ChangePasswordResponse changePasswordResponse =
+          //     ChangePasswordResponse.fromJson(baseResponse.response);
+          print(
+              "baseResponse ${baseResponse.message}");
+
+          return baseResponse.message;
         },
         errparse: (response) {
           ErrResponse errResponse = response;
@@ -62,13 +66,13 @@ class AuthRepoClass {
           return errResponse;
         });
   }
+
   static regenToken(RegenTokenRequestBody regenTokenRequestBody) {
     return HttpService(
-        url: Constant.changePassword,
+        url: Constant.regenToken,
         body: regenTokenRequestBody.toJson(),
         parse: (response) {
           BaseResponse baseResponse = response;
-        
         },
         errparse: (response) {
           ErrResponse errResponse = response;
@@ -77,6 +81,3 @@ class AuthRepoClass {
         });
   }
 }
-
-  
-

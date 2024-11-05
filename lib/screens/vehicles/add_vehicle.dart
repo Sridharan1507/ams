@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:ams/bloc/vehicle/vehicle_bloc.dart';
 import 'package:ams/bloc/vehicle/vehicle_event.dart';
 import 'package:ams/bloc/vehicle/vehicle_state.dart';
+import 'package:ams/model/get_user.dart';
 import 'package:ams/model/vehicle/add_vechiles.dart';
 import 'package:ams/model/vehicle/vehicle_sub_cat.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -33,7 +34,7 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
       TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController amountTextEditingController = TextEditingController();
-  TextEditingController amountType = TextEditingController();
+  String amountType='';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   VehicleBloc vehicleBloc = VehicleBloc();
@@ -45,6 +46,12 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
     super.initState();
     vehicleBloc.add(GetVehicleSubCategoryEvent());
   }
+
+  List<AmountType> amountTypeList = [
+    AmountType(code: "PER_DAY", name: "Pay Per Day"),
+    AmountType(code: "PER_HOUR", name: "Pay Per Hour"),
+    AmountType(code: "PER_KM", name: "Pay Per Kilometer")
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -375,33 +382,82 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                   ),
                 ],
               ),
-              TextFormField(
-                controller: amountType,
-                showCursor: true,
-                style: Theme.of(context).custom().textBody5_Light_M,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 15.0),
-                  labelText: 'Enter Amount Type',
-                  labelStyle: Theme.of(context).custom().textBody5_Light_M,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    borderSide:
-                        BorderSide(color: Constant.borderColorLight!, width: 1),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: Constant.borderColorLight!,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    borderSide:
-                        BorderSide(color: Constant.borderColorLight!, width: 2),
-                  ),
-                ),
-              ),
+             DropdownSearch<AmountType>(
+  dropdownDecoratorProps: DropDownDecoratorProps(
+    dropdownSearchDecoration: InputDecoration(
+      contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      labelText: 'Enter Amount Type',
+      labelStyle: Theme.of(context).custom().textBody5_Light_M,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderSide: BorderSide(color: Constant.borderColorLight!, width: 1),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: Constant.borderColorLight!,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderSide: BorderSide(color: Constant.borderColorLight!, width: 2),
+      ),
+      hintText: 'Select Amount Type',
+      hintStyle: Theme.of(context).custom().textBody5_Dark_M,
+      // icon: const Padding(
+      //   padding: EdgeInsets.all(8.0),
+      //   child: Icon(
+      //     Icons.local_shipping,
+      //     color: Colors.black,
+      //     size: 17,
+      //   ),
+      // ),
+    ),
+  ),
+  // mode: Mode.MENU, // You can also use Mode.BOTTOM_SHEET or Mode.DIALOG
+  itemAsString: (AmountType? v) {
+    if (v == null) {
+      return "";
+    }
+    return v.name; // No need for `??` since name should not be null
+  },
+  items: amountTypeList,
+  onChanged: (value) {
+    print("Selected: ${value!.code}");
+    amountType=value.code;
+  },
+  selectedItem: null, // You can set a default selected item here
+  // showSearchBox: true, // Enables the search box
+)
+,
+            //   TextFormField(
+            //     controller: amountType,
+            //     showCursor: true,
+            //     style: Theme.of(context).custom().textBody5_Light_M,
+            //     decoration: InputDecoration(
+            //       contentPadding: const EdgeInsets.symmetric(
+            //           vertical: 10.0, horizontal: 15.0),
+            //       labelText: 'Enter Amount Type',
+            //       labelStyle: Theme.of(context).custom().textBody5_Light_M,
+            //       enabledBorder: OutlineInputBorder(
+            //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //         borderSide:
+            //             BorderSide(color: Constant.borderColorLight!, width: 1),
+            //       ),
+            //       errorBorder: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //         borderSide: BorderSide(
+            //           color: Constant.borderColorLight!,
+            //         ),
+            //       ),
+            //       focusedBorder: OutlineInputBorder(
+            //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //         borderSide:
+            //             BorderSide(color: Constant.borderColorLight!, width: 2),
+            //       ),
+            //     ),
+            //   ),
+            //
             ],
           ),
           Column(
@@ -504,7 +560,7 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
             _toast(context, "Please enter Registration Number");
           } else if (amountTextEditingController.text.isEmpty) {
             _toast(context, "Please enter Amount");
-          } else if (amountType.text.isEmpty) {
+          } else if (amountType.isEmpty) {
             _toast(context, "Please enter Amount type");
           } else if (chasisnumberTextEditingController.text.isEmpty) {
             _toast(context, "Please enter Chasis number");
@@ -524,7 +580,7 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                 lat: geoposition.latitude,
                 lng: geoposition.longitude,
                 amount: double.parse(amountTextEditingController.text.trim()),
-                amountType: amountType.text.trim(),
+                amountType: amountType,
                 availabilityFlag: 1);
             vehicleBloc.add(AddVehicleEvent(addVehicleRequestBody));
             print("${jsonEncode(addVehicleRequestBody)}");

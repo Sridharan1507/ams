@@ -7,7 +7,7 @@ class SharedPreference {
   static const String userNameKey = "USER_NAME";
   static const String sessionIdleKey = "SESSION_IDLE_TIME";
   static const String accountSessionLogInfo = "ACCOUNT_SESSION_LOG_INFO";
-   static const String password = "PASSWORD";
+   static const String savePasswordkey = "PASSWORD";
 
   static Future<String> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,12 +21,12 @@ class SharedPreference {
 
     static Future<String> getPassword() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(password) ?? '';
+    return prefs.getString(savePasswordkey) ?? '';
   }
 
   static savePassword(String password) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(password, password);
+    prefs.setString(savePasswordkey, password);
   }
 
   static Future<String> getSessionToken() async {
@@ -85,10 +85,10 @@ class SharedPreference {
   }
 
   static login({String? authToken, String? sessionId, String? userNmae,String? password}) async {
-    saveAuthToken(authToken??"");
-    saveSessionToken(sessionId??"");
+    saveAuthToken(authToken!);
+    saveSessionToken(sessionId!);
     saveIsLogged(true);
-    setUserName(userNmae??"");
-    savePassword(password??"");
+    setUserName(userNmae!);
+    savePassword(password!);
   }
 }

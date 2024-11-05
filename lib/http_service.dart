@@ -76,7 +76,13 @@ String processedUrl = resource.url!;
 
         return res;
       } else {
-        throw Exception(response.statusCode);
+         dynamic res;
+        var responseJson = json.decode(response.body);
+        if (responseJson['status'] == false) {
+            res = resource.errparse!(ErrResponse.fromJSON(responseJson));
+        }
+         return res;
+        // throw Exception(response.statusCode);
       }
     } else {
       return buildTokenExpiredErrorResponse(resource);
@@ -85,6 +91,7 @@ String processedUrl = resource.url!;
 
   Future<T> post<T>(HttpService<T> resource) async {
   String token = await SharedPreference.getAuthToken();
+   print("token $token");
     Map<String, String> headers = {};
 
     // String processedUrl = await authenticateUrl(resource.url!);
@@ -119,7 +126,13 @@ String processedUrl = resource.url!;
         return res;
       }
        else {
-        throw Exception(response.statusCode);
+         dynamic res;
+        var responseJson = json.decode(response.body);
+        if (responseJson['status'] == false) {
+          res = resource.errparse!(ErrResponse.fromJSON(responseJson));
+        }
+        return res;
+        // throw Exception(response.statusCode);
       }
     } else {
       return buildTokenExpiredErrorResponse(resource);
@@ -149,7 +162,7 @@ class BaseResponse {
     final data = BaseResponse(
         status: jsonMap["status"],
         message: jsonMap["message"],
-        response: jsonMap["data"] != null ? list : null);
+        response: jsonMap["data"] != null ? list : []);
     return data;
   }
 

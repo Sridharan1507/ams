@@ -133,3 +133,17 @@ class Role {
     return data;
   }
 }
+
+class AmountType {
+  String name; // Field for the name
+  String code; // Field for the code
+
+  // Constructor
+  AmountType({required this.name, required this.code});
+
+  // Optional: Method to display the details
+  @override
+  String toString() {
+    return 'AmountType(name: $name, code: $code)';
+  }
+}

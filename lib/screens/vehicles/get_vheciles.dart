@@ -145,112 +145,115 @@ class _ImageGridState extends State<ImageGrid> {
           }),
         )
       ],
-      body: Column(
-        children: [
-          BlocConsumer<VehicleBloc, VehicleState>(
-              listener: (context, state) {
-                _listenerGetUserBloc(context, state);
-              },
-              bloc: vehicleBloc,
-              builder: (context, VehicleState state) {
-                if (state is GetVehicleSubCategoryLoadedState) {
-                  return DropdownSearch<VehicleSubCatResponseData>(
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                      textAlignVertical: TextAlignVertical.center,
-                      dropdownSearchDecoration: InputDecoration(
-                          hintText: 'Select Vehicle Category',
-                          hintStyle:
-                              Theme.of(context).custom().textBody5_Dark_M,
-                          border: InputBorder.none,
-                          icon: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.local_shipping,
-                              color: Colors.black,
-                              size: 17,
-                            ),
-                          )),
-                    ),
-                    // mode: Mode.MENU, // You can also use Mode.BOTTOM_SHEET or Mode.DIALOG
-                    itemAsString: (VehicleSubCatResponseData? v) {
-                      if (v == null) {
-                        return "";
-                      }
-                      return v.name ?? "";
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            BlocConsumer<VehicleBloc, VehicleState>(
+                listener: (context, state) {
+                  _listenerGetUserBloc(context, state);
+                },
+                bloc: vehicleBloc,
+                builder: (context, VehicleState state) {
+                  if (state is GetVehicleSubCategoryLoadedState) {
+                    return DropdownSearch<VehicleSubCatResponseData>(
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        textAlignVertical: TextAlignVertical.center,
+                        dropdownSearchDecoration: InputDecoration(
+                            hintText: 'Select Vehicle Sub Category',
+                            hintStyle:
+                                Theme.of(context).custom().textBody5_Dark_M,
+                            border: InputBorder.none,
+                            icon: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.local_shipping,
+                                color: Colors.black,
+                                size: 17,
+                              ),
+                            )),
+                      ),
+                      // mode: Mode.MENU, // You can also use Mode.BOTTOM_SHEET or Mode.DIALOG
+                      itemAsString: (VehicleSubCatResponseData? v) {
+                        if (v == null) {
+                          return "";
+                        }
+                        return v.name ?? "";
+                      },
+                      items: state.vehicleSubCatResponseData!,
+                      onChanged: (value) {
+                        print("Selected: ${value!.code}");
+                        subCatCode = value.categoryId!;
+                      },
+                      selectedItem:
+                          null, // You can set a default selected item here
+                      // showSearchBox: true, // Enables the search box
+                    );
+                  }
+                  return const Text("user not yet");
+                }),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // 2 columns per row
+                  childAspectRatio: 0.8, // Adjust for card aspect ratio
+                  crossAxisSpacing: 8.0, // Space between columns
+                  mainAxisSpacing: 8.0, // Space between rows
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  HalfImageHalfTextScreen()));
                     },
-                    items: state.vehicleSubCatResponseData!,
-                    onChanged: (value) {
-                      print("Selected: ${value!.code}");
-                      subCatCode = value.categoryId!;
-                    },
-                    selectedItem:
-                        null, // You can set a default selected item here
-                    // showSearchBox: true, // Enables the search box
-                  );
-                }
-                return const Text("user not yet");
-              }),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 columns per row
-                childAspectRatio: 0.8, // Adjust for card aspect ratio
-                crossAxisSpacing: 8.0, // Space between columns
-                mainAxisSpacing: 8.0, // Space between rows
-              ),
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                HalfImageHalfTextScreen()));
-                  },
-                  child: Card(
-                    surfaceTintColor: Colors.grey.shade100,
-                    elevation: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            items[index]['title'] ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                  8), // Rounded corners (optional)
-                              image: DecorationImage(
-                                image: AssetImage(items[index]['image'] ?? ''),
-                                fit: BoxFit.cover,
+                    child: Card(
+                      surfaceTintColor: Colors.grey.shade100,
+                      elevation: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              items[index]['title'] ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            items[index]['description'] ?? '',
-                            style: const TextStyle(fontSize: 14),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    8), // Rounded corners (optional)
+                                image: DecorationImage(
+                                  image: AssetImage(items[index]['image'] ?? ''),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              items[index]['description'] ?? '',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

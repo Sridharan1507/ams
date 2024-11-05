@@ -273,21 +273,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       print('GetAuthTokenLoadingState');
     } else if (state is ChangePasswordLoadedState) {
       print('GetAuthTokenLoadedState');
-      if (state.authResponse != null) {
-              SharedPreference.login(
-                  authToken: state.authResponse![0].accessToken.toString(),
-                  sessionId: state.authResponse![0].sessionToken.toString(),
-                  userNmae: newPasswordTextEditingController.text.trim(),
-                  password: passwordTextEditingController.text.trim());
-            }
 
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (BuildContext context) =>
-      //          MachineConfiguratorScreen()));
+      print("newPasswordTextEditingController.text.trim() ${newPasswordTextEditingController.text.trim()}");
+              SharedPreference.savePassword( newPasswordTextEditingController.text.trim());
+          
+         
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) =>
+               MachineConfiguratorScreen()));
     } else if (state is ChangePasswordErrorState) {
       print('GetAuthToken Error');
       _toast(context, state.error);
     }
+  }
+
+  getPassword()async{
+    String password=await SharedPreference.getPassword();
+    print("password $password");
   }
 
     _listenerGetUserBloc(context, state) {
@@ -312,9 +315,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         bloc: authBloc,
         builder: (context, AuthState state) {
           if (state is ChangePasswordLoadedState) {
-            return const Text("Loaded");
+             getPassword();
+            return const Text("change password Loaded");
           }
-          return const Text("not yet");
+          return const Text("change password not yet");
         });
   }
 
