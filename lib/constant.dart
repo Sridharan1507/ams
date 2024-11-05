@@ -11,6 +11,8 @@ class Constant {
   static String travelsName = "EzeeBus";
   static String splashlogo="lib/assets/images/pexels-aboodi-17366063.jpg"; 
   static String splashlogo1="lib/assets/images/appstore.png"; 
+  static String orderImage='lib/assets/images/21395.jpg';
+  static String addImage='lib/assets/images/uzmd_cpph_150410.jpg';
   static String cartoon="lib/assets/images/beautiful-minimalist-landscape.jpg";
   static String getAuth="http://rljzs2n.localto.net/vehicle_rent/appApiv1/auth";
   static String changePassword='http://rljzs2n.localto.net/vehicle_rent/appApiv1change-password';

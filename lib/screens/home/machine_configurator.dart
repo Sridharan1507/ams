@@ -197,39 +197,72 @@ Widget _splash(BuildContext context) {
               ),
             ),
           )),
-      Positioned.fill(
-          child: Padding(
-        padding: const EdgeInsets.only(top: 130.0),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: GestureDetector(
-            onTap: () {
-              
-               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                           const GetVehicleScreen()));
-            },
-            child: Container(
-              height: 200,
-              width: 300,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54, width: 3),
-                  color: Colors.grey.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(10))),
-              child: const Center(
-                  child: Text("Order",
-                      style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black))
-                  // ),
-                  ),
+  Positioned.fill(
+  child: Padding(
+    padding: const EdgeInsets.only(top: 130.0),
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const GetVehicleScreen(),
             ),
+          );
+        },
+        child: Container(
+          height: 200,
+          width: 300,
+          decoration: BoxDecoration(
+            // image: DecorationImage(
+            //   image: AssetImage(Constant.orderImage),
+            //   fit: BoxFit.scaleDown,
+            //   alignment: Alignment.center,
+            // ),
+            border: Border.all(color: Colors.black54, width: 3),
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Push items to top and bottom
+            crossAxisAlignment: CrossAxisAlignment.center,  // Center horizontally
+            children: [
+              // Image part inside the container
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(Constant.orderImage),
+                      fit: BoxFit.scaleDown,  // Adjust the image's fit
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ),
+              ),
+              // Text part inside the container
+              Padding(
+                padding: const EdgeInsets.all(8.0),  // Optional padding for the text
+                child: Text(
+                  'Order',  // Replace with your desired text
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,  // Change text color as needed
+                  ),
+                  textAlign: TextAlign.center,  // Center text horizontally
+                ),
+              ),
+            ],
           ),
         ),
-      )),
+      ),
+    ),
+  ),
+)
+
+
+,
       Positioned.fill(
           child: Padding(
         padding: const EdgeInsets.only(bottom: 130.0),
@@ -244,21 +277,50 @@ Widget _splash(BuildContext context) {
                           const AddVehicleScrenn()));
             },
             child: Container(
-              height: 200,
-              width: 300,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54, width: 3),
-                  color: Colors.grey.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(10))),
-              child: const Center(
-                  child: Text("Add",
-                      style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black))
-                  // ),
+          height: 200,
+          width: 300,
+          decoration: BoxDecoration(
+            // image: DecorationImage(
+            //   image: AssetImage(Constant.orderImage),
+            //   fit: BoxFit.scaleDown,
+            //   alignment: Alignment.center,
+            // ),
+            border: Border.all(color: Colors.black54, width: 3),
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Push items to top and bottom
+            crossAxisAlignment: CrossAxisAlignment.center,  // Center horizontally
+            children: [
+              // Image part inside the container
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(Constant.addImage),
+                      fit: BoxFit.scaleDown,  // Adjust the image's fit
+                      alignment: Alignment.center,
+                    ),
                   ),
-            ),
+                ),
+              ),
+              // Text part inside the container
+              Padding(
+                padding: const EdgeInsets.all(8.0),  // Optional padding for the text
+                child: Text(
+                  'Add',  // Replace with your desired text
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,  // Change text color as needed
+                  ),
+                  textAlign: TextAlign.center,  // Center text horizontally
+                ),
+              ),
+            ],
+          ),
+        ),
           ),
         ),
       )),
