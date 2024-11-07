@@ -23,6 +23,21 @@ class GetVehicleCategoryEvent extends VehicleEvent {
   List<Object?> get props => [];
 }
 
+
+class GetMyVehiclesEvent extends VehicleEvent {
+  GetMyVehiclesEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetEnquieryEvent extends VehicleEvent {
+  GetEnquieryEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class AddVehicleEvent extends VehicleEvent {
   final AddVehicleRequestBody addVehicleRequestBody;
   AddVehicleEvent(this.addVehicleRequestBody);

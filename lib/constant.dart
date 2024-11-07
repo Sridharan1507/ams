@@ -24,6 +24,8 @@ class Constant {
   static String getvehicleCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-category';
   static String getvehicleSubCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-sub-category';
   static String addVechile='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register-vehicle';
+  static String getMyvechiles='http://rljzs2n.localto.net/vehicle_rent/appApiv1/my-vehicles';
+  static String getEnquiries='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get_enquiries';
   static String useraddenquiry='https://rljzs2n.localto.net/vehicle_rent/appApiv1/add-enquiry/';
 
   //region Defaults

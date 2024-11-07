@@ -17,6 +17,8 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
     on<GetVehicleCategoryEvent>(getvehicleCategory);
     on<AddVehicleEvent>(addVehicle);
     on<GetVehicleSubCategoryEvent>(getvehiclesubCategory);
+    on<GetMyVehiclesEvent>(getMyVehicles);
+    on<GetEnquieryEvent>(enquiresList);
   }
 }
 
@@ -91,6 +93,42 @@ void addVehicle(
       emit(AddVehicleLoadedState(data));
     }
   } 
+
+  void getMyVehicles(
+    GetMyVehiclesEvent event, Emitter<VehicleState> emit) async {
+  // try {
+    emit(GetMyVehicleLoadingState());
+
+    final data = await APIWeb()
+        .get(VehicleRepo.getMyVehicles());
+
+    if (data is ErrResponse) {
+      log(data.toString());
+      emit(GetMyVehicleErrorState(data.message!));
+    } else {
+      emit(GetMyVehicleLoadedState(data));
+    }
+  } 
+
+  void enquiresList(
+    GetEnquieryEvent event, Emitter<VehicleState> emit) async {
+  // try {
+    emit(GetEnquireyListLoadingState());
+
+    final data = await APIWeb()
+        .get(VehicleRepo.enquiresList());
+
+    if (data is ErrResponse) {
+      log(data.toString());
+      emit(GetEnquireyListErrorState(data.message!));
+    } else {
+      emit(GetEnquireyListLoadedState(data));
+    }
+  } 
+
+  
+
+  
   // catch (ex) {
   //   emit(AddVehicleErrorState(ex.toString()));
   // }

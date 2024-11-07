@@ -104,3 +104,50 @@ class AddVehicleErrorState extends VehicleState {
   @override
   List<Object?> get props => [error];
 }
+
+
+class GetMyVehicleLoadingState extends VehicleState {
+  @override
+  List<Object?> get props => [];
+}
+
+class GetMyVehicleLoadedState extends VehicleState {
+  final List<MyvehilcesResponseData>? getMyVehicleResponse;
+
+  GetMyVehicleLoadedState(this.getMyVehicleResponse);
+
+  @override
+  List<Object?> get props => [getMyVehicleResponse];
+}
+
+class GetMyVehicleErrorState extends VehicleState {
+  final String error;
+
+  GetMyVehicleErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class GetEnquireyListLoadingState extends VehicleState {
+  @override
+  List<Object?> get props => [];
+}
+
+class GetEnquireyListLoadedState extends VehicleState {
+  final List<GetEnquiresListResponseData>? getEnquireyListResponse;
+
+  GetEnquireyListLoadedState(this.getEnquireyListResponse);
+
+  @override
+  List<Object?> get props => [getEnquireyListResponse];
+}
+
+class GetEnquireyListErrorState extends VehicleState {
+  final String error;
+
+  GetEnquireyListErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}

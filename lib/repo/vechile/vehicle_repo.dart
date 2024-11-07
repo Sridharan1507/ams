@@ -77,4 +77,42 @@ class VehicleRepo {
           return errResponse;
         });
   }
+
+    static getMyVehicles() {
+    return HttpService(
+        url: Constant.getMyvechiles,
+        parse: (response) {
+          BaseResponse baseResponse = response;
+          List<MyvehilcesResponseData>? myvehicles =
+              (baseResponse.response as List)
+                  .map((item) => MyvehilcesResponseData.fromJson(item))
+                  .toList();
+          log(jsonEncode(myvehicles));
+          return myvehicles;
+        },
+        errparse: (response) {
+          ErrResponse errResponse = response;
+
+          return errResponse;
+        });
+  }
+
+    static enquiresList() {
+    return HttpService(
+        url: Constant.getEnquiries,
+        parse: (response) {
+          BaseResponse baseResponse = response;
+          List<GetEnquiresListResponseData>? getenquiries =
+              (baseResponse.response as List)
+                  .map((item) => GetEnquiresListResponseData.fromJson(item))
+                  .toList();
+          log(jsonEncode(getenquiries));
+          return getenquiries;
+        },
+        errparse: (response) {
+          ErrResponse errResponse = response;
+
+          return errResponse;
+        });
+  }
 }

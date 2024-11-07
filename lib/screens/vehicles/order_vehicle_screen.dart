@@ -59,8 +59,11 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
     print("adddress $_address");
   }
 
+  String amountType='';
   @override
   Widget build(BuildContext context) {
+amountType=widget.vehicleSubCatResponseData.amountType!.replaceAll("_", " ");
+
     return Scaffold(
       appBar: AppBar(
             elevation: 0,
@@ -116,24 +119,49 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    widget.vehicleSubCatResponseData.name??'',
-                    style: TextStyle(fontSize: 16), // Changed to 16
+                  Padding(
+                    padding: const EdgeInsets.only(left:10.0),
+                    child: Text(
+                      widget.vehicleSubCatResponseData.name??'',
+                      style: TextStyle(fontSize: 16), // Changed to 16
+                    ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    widget.vehicleSubCatResponseData.engineNumber??'',
+                   const Text(
+                    'Engine Number',
                     style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    widget.vehicleSubCatResponseData.amount??'',
+                  Padding(
+                     padding: const EdgeInsets.only(left:10.0),
+                    child: Text(
+                      widget.vehicleSubCatResponseData.engineNumber??'',
+                      style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.bold), // Changed to 13.5
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                   const Text(
+                    'Amount',
                     style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold), // Changed to 13.5
                   ),
+                  SizedBox(height: 10),
+                  Padding(
+                     padding: const EdgeInsets.only(left:10.0),
+                    child: Text(
+                      "${widget.vehicleSubCatResponseData.amount??''} - $amountType",
+                      style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.bold), // Changed to 13.5
+                    ),
+                  ),
+                   SizedBox(height: 10),
+                   
 
 
 

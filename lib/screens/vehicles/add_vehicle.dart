@@ -567,8 +567,8 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
           } else if (engineNumberTextEditingController.text.isEmpty) {
             _toast(context, "Please enter Engine NUmber");
           } else {
-            geo.Position geoposition = await geo.Geolocator.getCurrentPosition(
-                desiredAccuracy: geo.LocationAccuracy.medium);
+            // geo.Position geoposition = await geo.Geolocator.getCurrentPosition(
+            //     desiredAccuracy: geo.LocationAccuracy.medium);
 
             AddVehicleRequestBody addVehicleRequestBody = AddVehicleRequestBody(
                 subCatId: int.parse(subCatCode),
@@ -577,8 +577,10 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                 engineNumber: engineNumberTextEditingController.text.trim(),
                 chassisNumber: chasisnumberTextEditingController.text.trim(),
                 radius: 50,
-                lat: geoposition.latitude,
-                lng: geoposition.longitude,
+                lat: 12.859080,
+                // geoposition.latitude,
+                lng: 80.038452,
+                // geoposition.longitude,
                 amount: double.parse(amountTextEditingController.text.trim()),
                 amountType: amountType,
                 availabilityFlag: 1);

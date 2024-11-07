@@ -57,25 +57,48 @@ class ImageGrid extends StatefulWidget {
 class _ImageGridState extends State<ImageGrid> {
   final List<Map<String, String>> items = [
     {
-      'title': 'Seeder',
+      'title': 'SEEDER',
       'description': 'Description for image 1',
       'image': 'lib/assets/images/close-up-seeder-attached-tractor-field.jpg',
     },
     {
-      'title': 'Loader',
+      'title': 'LOADER',
       'description': 'Description for image 2',
       'image': 'lib/assets/images/loader.jpg',
     },
     {
-      'title': 'Excavator',
+      'title': 'EXCAVATOR',
       'description': 'Description for image 3',
       'image': 'lib/assets/images/excavator.jpg',
     },
     {
-      'title': 'Tractor',
+      'title': 'TRACTOR',
       'description': 'Description for image 4',
       'image': 'lib/assets/images/tractor-cultivating-field.jpg',
     },
+    {
+      'title': 'TRAILER',
+      'description': 'Description for image 4',
+      'image': 'lib/assets/images/trailer.png',
+    },
+      {
+      'title': 'HARVESTER',
+      'description': 'Description for image 4',
+      'image': 'lib/assets/images/harvesting-combine-field.jpg',
+    },
+    {
+      'title': 'PLOUGH',
+      'description': 'Description for image 4',
+      'image': 'lib/assets/images/plough.jpg',
+    },
+    {
+      'title': 'SPRAYER',
+      'description': 'Description for image 4',
+      'image': 'lib/assets/images/sprayer.jpg',
+    },
+    
+    
+    
     // Add more items as needed
   ];
   String subCatCode = '';
@@ -87,7 +110,7 @@ class _ImageGridState extends State<ImageGrid> {
   void initState() {
     // TODO: implement initState
     vehicleBloc.add(GetVehicleSubCategoryEvent());
-    vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "12.971600,77.594600")));
+    vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "12.859080,80.038452")));
     super.initState();
   }
 
@@ -152,67 +175,19 @@ class _ImageGridState extends State<ImageGrid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      persistentFooterButtons: [
-        Center(
-          child: buildElevatedButtonLarge(
-              "Search", Colors.white, Colors.green, Colors.grey.shade400,
-              () async {
-            print("Add New users");
-          }),
-        )
-      ],
+     
       body: Column(
         children: [
-          BlocConsumer<VehicleBloc, VehicleState>(
-              listener: (context, state) {
-                _listenerGetUserBloc(context, state);
-              },
-              bloc: vehicleBloc,
-              builder: (context, VehicleState state) {
-                if (state is GetVehicleSubCategoryLoadedState) {
-                  return DropdownSearch<VehicleSubCatResponseData>(
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                      textAlignVertical: TextAlignVertical.center,
-                      dropdownSearchDecoration: InputDecoration(
-                          hintText: 'Select Vehicle Category',
-                          hintStyle:
-                              Theme.of(context).custom().textBody5_Dark_M,
-                          border: InputBorder.none,
-                          icon: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.local_shipping,
-                              color: Colors.black,
-                              size: 17,
-                            ),
-                          )),
-                    ),
-                    // mode: Mode.MENU, // You can also use Mode.BOTTOM_SHEET or Mode.DIALOG
-                    itemAsString: (VehicleSubCatResponseData? v) {
-                      if (v == null) {
-                        return "";
-                      }
-                      return v.name ?? "";
-                    },
-                    items: state.vehicleSubCatResponseData!,
-                    onChanged: (value) {
-                      print("Selected: ${value!.code}");
-                      subCatCode = value.categoryId!;
-                    },
-                    selectedItem:
-                        null, // You can set a default selected item here
-                    // showSearchBox: true, // Enables the search box
-                  );
-                }
-                return const Text("user not yet");
-              }),
-    BlocConsumer<VehicleBloc, VehicleState>(
+         BlocConsumer<VehicleBloc, VehicleState>(
     listener: (context, state) {
     _listenerGetUserBloc(context, state);
     },
     bloc: vehicleBloc2,
     builder: (context, VehicleState state) {
     if (state is GetAllVechilesLoadedState) {
+     
+
+      
     return      Expanded(
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -223,6 +198,13 @@ class _ImageGridState extends State<ImageGrid> {
               ),
               itemCount: state.getAllVehiclesResponseData.vechileList?.length??0,
               itemBuilder: (context, index) {
+                 String assetImagepath='';
+
+      for(int i =0;i<items.length;i++){
+        if(items[i]['title']==state.getAllVehiclesResponseData.vechileList![index].categoryCode){
+          assetImagepath=items[i]['image']!;
+        }
+      }
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -253,7 +235,7 @@ class _ImageGridState extends State<ImageGrid> {
                               borderRadius: BorderRadius.circular(
                                   8), // Rounded corners (optional)
                               image: DecorationImage(
-                                image: AssetImage(items[0]['image'] ?? ''),
+                                image: AssetImage(assetImagepath),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -262,7 +244,7 @@ class _ImageGridState extends State<ImageGrid> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            state.getAllVehiclesResponseData.vechileList![index].amount??'',
+                            "₹ ${state.getAllVehiclesResponseData.vechileList![index].amount??''} ${state.getAllVehiclesResponseData.vechileList![index].amountType!.replaceAll("_", " ")??''}",
                             style: const TextStyle(fontSize: 14),
                           ),
                         ),

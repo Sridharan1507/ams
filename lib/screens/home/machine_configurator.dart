@@ -1,9 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, must_be_immutable
 
 import 'package:ams/model/get_user.dart';
+import 'package:ams/screens/feedback/feedback_screen.dart';
 import 'package:ams/screens/login/change_password.dart';
 import 'package:ams/screens/vehicles/add_vehicle.dart';
 import 'package:ams/screens/vehicles/get_vheciles.dart';
+import 'package:ams/screens/vehicles/my_vehicles.dart';
 import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:ams/constant.dart';
@@ -115,6 +117,8 @@ class _MachineConfiguratorScreenState extends State<MachineConfiguratorScreen> {
               currentPage == DrawerSections.changePassword ? true : false),
           menuItem(3, "FeedBack", Icons.feedback_outlined,
               currentPage == DrawerSections.FeedBack ? true : false),
+               menuItem(5, "My Vehicles", Icons.bus_alert,
+              currentPage == DrawerSections.Myvehicles ? true : false),
           menuItem(4, "Logout", Icons.logout_outlined,
               currentPage == DrawerSections.Logout ? true : false),
         ],
@@ -136,11 +140,15 @@ class _MachineConfiguratorScreenState extends State<MachineConfiguratorScreen> {
                   builder: (BuildContext context) => const ChangePasswordScreen()));
             } else if (id == 3) {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const SignUpScreen()));
+                  builder: (BuildContext context) => const MyFeedback()));
             } else if (id == 4) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      const MachineConfiguratorScreen()));
+                      const SignUpScreen()));
+            }else if (id == 5) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      const MyVehiclesScreen()));
             }
           });
         },
@@ -177,6 +185,7 @@ enum DrawerSections {
   dashboard,
   changePassword,
   FeedBack,
+  Myvehicles,
   Logout,
 }
 
