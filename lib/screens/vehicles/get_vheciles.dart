@@ -7,6 +7,7 @@ import 'package:ams/screens/vehicles/order_vehicle_screen.dart';
 import 'package:ams/theme/theme.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,13 +106,22 @@ class _ImageGridState extends State<ImageGrid> {
   VehicleBloc vehicleBloc = VehicleBloc();
   VehicleBloc vehicleBloc2 = VehicleBloc();
   List<VehicleSubCatResponseData> itemsinve = [];
+   geo.Position? geoposition ;
 
   @override
   void initState() {
+   getLocation();
     // TODO: implement initState
     vehicleBloc.add(GetVehicleSubCategoryEvent());
-    vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "12.859080,80.038452")));
+    // geoposition.latitude;
+    // geoposition.longitude;
+    vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "40.712776,-74.005974")));
     super.initState();
+  }
+
+  getLocation()async{
+ geoposition = await geo.Geolocator.getCurrentPosition(
+                desiredAccuracy: geo.LocationAccuracy.medium);
   }
 
   _listenerGetUserBloc(context, state) {
@@ -186,7 +196,7 @@ class _ImageGridState extends State<ImageGrid> {
     builder: (context, VehicleState state) {
     if (state is GetAllVechilesLoadedState) {
      
-
+print("state.getAllVehiclesResponseData.vechileList ${state.getAllVehiclesResponseData.vechileList!.length}");
       
     return      Expanded(
             child: GridView.builder(

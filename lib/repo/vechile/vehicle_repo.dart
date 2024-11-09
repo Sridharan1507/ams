@@ -5,6 +5,7 @@ import 'package:ams/constant.dart';
 import 'package:ams/http_service.dart';
 import 'package:ams/model/vehicle/add_vechiles.dart';
 import 'package:ams/model/vehicle/get_vechiles.dart';
+import 'package:ams/model/vehicle/vehicle_cat.dart';
 import 'package:ams/model/vehicle/vehicle_sub_cat.dart';
 
 class VehicleRepo {
@@ -30,6 +31,12 @@ class VehicleRepo {
         url: Constant.getvehicleCategory,
         parse: (response) {
           BaseResponse baseResponse = response;
+            List<VehicleCatResposeData>? vehicleCatResponseData =
+              (baseResponse.response as List)
+                  .map((item) => VehicleCatResposeData.fromJson(item))
+                  .toList();
+          log(jsonEncode(vehicleCatResponseData));
+          return vehicleCatResponseData;
         },
         errparse: (response) {
           ErrResponse errResponse = response;

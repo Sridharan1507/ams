@@ -41,12 +41,12 @@ class GetVehicleCategoryLoadingState extends VehicleState {
 }
 
 class GetVehicleCategoryLoadedState extends VehicleState {
-  final List<VehicleSubCatResponseData>? vehicleSubCatResposeData;
+  final List<VehicleCatResposeData>? vehicleCatResposeData;
 
-  GetVehicleCategoryLoadedState(this.vehicleSubCatResposeData);
+  GetVehicleCategoryLoadedState(this.vehicleCatResposeData);
 
   @override
-  List<Object?> get props => [vehicleSubCatResposeData];
+  List<Object?> get props => [vehicleCatResposeData];
 }
 
 class GetVehicleCategoryErrorState extends VehicleState {

@@ -7,6 +7,7 @@ import 'package:ams/bloc/vehicle/vehicle_event.dart';
 import 'package:ams/bloc/vehicle/vehicle_state.dart';
 import 'package:ams/model/get_user.dart';
 import 'package:ams/model/vehicle/add_vechiles.dart';
+import 'package:ams/model/vehicle/vehicle_cat.dart';
 import 'package:ams/model/vehicle/vehicle_sub_cat.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -38,13 +39,17 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   VehicleBloc vehicleBloc = VehicleBloc();
-  String subCatCode = '';
+   VehicleBloc vehicleBloc_1 = VehicleBloc();
+  String catIdCode = '';
+  String subcatIdCode = '';
 
   List<VehicleSubCatResponseData> items = [];
+    List<VehicleCatResposeData> vehicleCatList = [];
   @override
   void initState() {
     super.initState();
-    vehicleBloc.add(GetVehicleSubCategoryEvent());
+    
+    vehicleBloc.add(GetVehicleCategoryEvent());
   }
 
   List<AmountType> amountTypeList = [
@@ -94,18 +99,42 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
     );
   }
 
+  _listenerCatVehicleBloc(context, state) {
+    if (state is GetVehicleCategoryLoadingState) {
+      print('GetVehicleSubCategoryLoadingState');
+    } else if (state is GetVehicleCategoryLoadedState) {
+      _toast(context, "GetVehicleCategoryLoadedState Got");
+      vehicleCatList = state.vehicleCatResposeData!;
+     
+      print("vehicleCatList ${vehicleCatList.length}");
+      print("vehicleCatList ${vehicleCatList.map((e) => e.name)}");
+    } else if (state is GetVehicleCategoryErrorState) {
+      print('GetVehicleSubCategoryErrorState');
+      _toast(context, state.error);
+    }
+  }
   _listenerGetUserBloc(context, state) {
     if (state is GetVehicleSubCategoryLoadingState) {
       print('GetVehicleSubCategoryLoadingState');
     } else if (state is GetVehicleSubCategoryLoadedState) {
       _toast(context, "GetVehicleSubCategoryLoadedState Got");
       items = state.vehicleSubCatResponseData!;
+      filterProductsByCategory(catIdCode);
       print("items ${items.length}");
       print("items ${items.map((e) => e.name)}");
     } else if (state is GetVehicleSubCategoryErrorState) {
       print('GetVehicleSubCategoryErrorState');
       _toast(context, state.error);
     }
+  }
+
+  
+  // Function to filter products by category_id
+  void filterProductsByCategory(String categoryId) {
+    // Filter products by category_id
+    setState(() {
+      items = items.where((product) => product.categoryId == categoryId).toList();
+    });
   }
 
   Widget buildVehicleDriverForm() {
@@ -115,16 +144,60 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
         children: [
           BlocConsumer<VehicleBloc, VehicleState>(
               listener: (context, state) {
-                _listenerGetUserBloc(context, state);
+                _listenerCatVehicleBloc(context, state);
               },
               bloc: vehicleBloc,
+              builder: (context, VehicleState state) {
+                if (state is GetVehicleCategoryLoadedState) {
+                  return DropdownSearch<VehicleCatResposeData>(
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      textAlignVertical: TextAlignVertical.center,
+                      dropdownSearchDecoration: InputDecoration(
+                          hintText: 'Select Vehicle Category',
+                          hintStyle:
+                              Theme.of(context).custom().textBody5_Dark_M,
+                          border: InputBorder.none,
+                          icon: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.local_shipping,
+                              color: Colors.black,
+                              size: 17,
+                            ),
+                          )),
+                    ),
+                    // mode: Mode.MENU, // You can also use Mode.BOTTOM_SHEET or Mode.DIALOG
+                    itemAsString: (VehicleCatResposeData? v) {
+                      if (v == null) {
+                        return "";
+                      }
+                      return v.name ?? "";
+                    },
+                    items: state.vehicleCatResposeData!,
+                    onChanged: (value) {
+                      print("Selected: ${value!.code}");
+                      catIdCode = value.id!;
+                       vehicleBloc_1.add(GetVehicleSubCategoryEvent());
+                    },
+                    selectedItem:
+                        null, // You can set a default selected item here
+                    // showSearchBox: true, // Enables the search box
+                  );
+                }
+                return const Text("user not yet");
+              }),
+          BlocConsumer<VehicleBloc, VehicleState>(
+              listener: (context, state) {
+                _listenerGetUserBloc(context, state);
+              },
+              bloc: vehicleBloc_1,
               builder: (context, VehicleState state) {
                 if (state is GetVehicleSubCategoryLoadedState) {
                   return DropdownSearch<VehicleSubCatResponseData>(
                     dropdownDecoratorProps: DropDownDecoratorProps(
                       textAlignVertical: TextAlignVertical.center,
                       dropdownSearchDecoration: InputDecoration(
-                          hintText: 'Select Vehicle Category',
+                          hintText: 'Select Vehicle Sub Category',
                           hintStyle:
                               Theme.of(context).custom().textBody5_Dark_M,
                           border: InputBorder.none,
@@ -144,10 +217,10 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                       }
                       return v.name ?? "";
                     },
-                    items: state.vehicleSubCatResponseData!,
+                    items: items,
                     onChanged: (value) {
                       print("Selected: ${value!.code}");
-                      subCatCode = value.categoryId!;
+                      subcatIdCode = value.categoryId!;
                     },
                     selectedItem:
                         null, // You can set a default selected item here
@@ -571,15 +644,15 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
             //     desiredAccuracy: geo.LocationAccuracy.medium);
 
             AddVehicleRequestBody addVehicleRequestBody = AddVehicleRequestBody(
-                subCatId: int.parse(subCatCode),
+                subCatId: int.parse(subcatIdCode),
                 vehicleName: vehicleNameTextEditingController.text.trim(),
                 registrationNumber: regNumberTextEditingController.text.trim(),
                 engineNumber: engineNumberTextEditingController.text.trim(),
                 chassisNumber: chasisnumberTextEditingController.text.trim(),
                 radius: 50,
-                lat: 12.859080,
+                lat: 40.712776,
                 // geoposition.latitude,
-                lng: 80.038452,
+                lng: -74.005974,
                 // geoposition.longitude,
                 amount: double.parse(amountTextEditingController.text.trim()),
                 amountType: amountType,
