@@ -113,8 +113,8 @@ class _ImageGridState extends State<ImageGrid> {
    getLocation();
     // TODO: implement initState
     vehicleBloc.add(GetVehicleSubCategoryEvent());
-    // geoposition.latitude;
-    // geoposition.longitude;
+    geoposition!.latitude;
+    geoposition!.longitude;
     vehicleBloc2.add(GetAllVechiclesEvent(GetVehiclesRequestBody(catCode: "NA",subCatCode: "NA",location: "40.712776,-74.005974")));
     super.initState();
   }
@@ -221,7 +221,7 @@ print("state.getAllVehiclesResponseData.vechileList ${state.getAllVehiclesRespon
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                HalfImageHalfTextScreen(vehicleSubCatResponseData: state.getAllVehiclesResponseData.vechileList![index],)));
+                                OrderConfirmationScreen(vehicleSubCatResponseData: state.getAllVehiclesResponseData.vechileList![index],assetImagepath: assetImagepath,)));
                   },
                   child: Card(
                     surfaceTintColor: Colors.grey.shade100,

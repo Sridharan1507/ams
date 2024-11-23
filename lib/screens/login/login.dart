@@ -317,9 +317,9 @@ class _LoginScreenState extends State<LoginScreen> {
         bloc: authBloc,
         builder: (context, AuthState state) {
           if (state is GetAuthTokenLoadedState) {
-            return const Text("Loaded");
+            return const SizedBox();
           }
-          return const Text("not yet");
+          return const SizedBox();
         });
   }
 
@@ -331,9 +331,9 @@ class _LoginScreenState extends State<LoginScreen> {
         bloc: userBloc,
         builder: (context, UserState state) {
           if (state is GetUserLoadedState) {
-            return const Text("user Loaded");
+            return const SizedBox();
           }
-          return const Text("user not yet");
+          return const SizedBox();
         });
   }
 }

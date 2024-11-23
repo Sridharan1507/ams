@@ -184,7 +184,7 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                     // showSearchBox: true, // Enables the search box
                   );
                 }
-                return const Text("user not yet");
+                return const  SizedBox();
               }),
           BlocConsumer<VehicleBloc, VehicleState>(
               listener: (context, state) {
@@ -227,7 +227,7 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                     // showSearchBox: true, // Enables the search box
                   );
                 }
-                return const Text("user not yet");
+                return const SizedBox();
               }),
           Column(
             children: [
@@ -640,8 +640,8 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
           } else if (engineNumberTextEditingController.text.isEmpty) {
             _toast(context, "Please enter Engine NUmber");
           } else {
-            // geo.Position geoposition = await geo.Geolocator.getCurrentPosition(
-            //     desiredAccuracy: geo.LocationAccuracy.medium);
+            geo.Position geoposition = await geo.Geolocator.getCurrentPosition(
+                desiredAccuracy: geo.LocationAccuracy.medium);
 
             AddVehicleRequestBody addVehicleRequestBody = AddVehicleRequestBody(
                 subCatId: int.parse(subcatIdCode),
@@ -650,10 +650,12 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
                 engineNumber: engineNumberTextEditingController.text.trim(),
                 chassisNumber: chasisnumberTextEditingController.text.trim(),
                 radius: 50,
-                lat: 40.712776,
-                // geoposition.latitude,
-                lng: -74.005974,
-                // geoposition.longitude,
+                lat: geoposition.latitude,
+                // 40.712776,
+                
+                lng:   geoposition.longitude,
+                // -74.005974,
+              
                 amount: double.parse(amountTextEditingController.text.trim()),
                 amountType: amountType,
                 availabilityFlag: 1);
@@ -673,9 +675,9 @@ class _AddVehicleScrennState extends State<AddVehicleScrenn> {
         bloc: vehicleBloc,
         builder: (context, VehicleState state) {
           if (state is AddVehicleLoadedState) {
-            return const Text("Loaded");
+            return const SizedBox();
           }
-          return const Text("not yet");
+          return const SizedBox();
         });
   }
 

@@ -10,16 +10,19 @@ import 'package:geocoding/geocoding.dart';
 
 import '../../model/vehicle/vehicle_sub_cat.dart';
 import 'controller.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 
-class HalfImageHalfTextScreen extends StatefulWidget {
+class OrderConfirmationScreen extends StatefulWidget {
   final VechileList vehicleSubCatResponseData;
-  HalfImageHalfTextScreen({required this.vehicleSubCatResponseData});
+
+  final String? assetImagepath;
+  OrderConfirmationScreen({required this.vehicleSubCatResponseData,this.assetImagepath});
   @override
-  _HalfImageHalfTextScreenState createState() =>
-      _HalfImageHalfTextScreenState();
+  _OrderConfirmationScreenState createState() =>
+      _OrderConfirmationScreenState();
 }
 
-class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
+class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
   @override
   void initState() {
     // TODO: implement initState
@@ -51,8 +54,14 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
   // *For Payment (9043117008 , 93425 04211)
 
   Future<void> _fetchAddress() async {
-    double latitude = 12.925090; // Replace with your latitude
-    double longitude = 80.100870; // Replace with your longitude
+    geo.Position geoposition = await geo.Geolocator.getCurrentPosition(
+                desiredAccuracy: geo.LocationAccuracy.medium);
+              // geoposition.latitude;
+    // geoposition.longitude;
+    double latitude = geoposition.latitude;
+    //  12.925090; // Replace with your latitude
+    double longitude =geoposition.longitude;
+    //  80.100870; // Replace with your longitude
     String address = await getAddressFromLatLng(latitude, longitude);
     setState(() {
       _address = address;
@@ -195,10 +204,10 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
             Container(
               height: MediaQuery.of(context).size.height * 0.30,
               width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      'lib/assets/images/tractor-cultivating-field.jpg'), // Replace with your image asset
+                      widget.assetImagepath!), // Replace with your image asset
                   fit: BoxFit.cover,
                 ),
               ),
@@ -290,13 +299,13 @@ class _HalfImageHalfTextScreenState extends State<HalfImageHalfTextScreen> {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () async {
-                      // if (await Controller.addinquiry(
-                      //         widget.vehicleSubCatResponseData.code!) ==
-                      //     1) {
-                      //   Constant.toast(context, "enquiry added");
-                      // } else {
-                      //   Constant.toast(context, "enquiry unable to add");
-                      // }
+                      if (await Controller.addinquiry(
+                              widget.vehicleSubCatResponseData.code!) ==
+                          1) {
+                        Constant.toast(context, "enquiry added");
+                      } else {
+                        Constant.toast(context, "enquiry unable to add");
+                      }
 
                       _showModalBottomSheet(context);
                     },

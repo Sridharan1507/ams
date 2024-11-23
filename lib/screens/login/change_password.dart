@@ -316,9 +316,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         builder: (context, AuthState state) {
           if (state is ChangePasswordLoadedState) {
              getPassword();
-            return const Text("change password Loaded");
+            return const SizedBox();
           }
-          return const Text("change password not yet");
+          return const SizedBox();
         });
   }
 

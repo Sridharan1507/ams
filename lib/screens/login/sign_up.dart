@@ -620,14 +620,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           } else if (state is UserRegistrationErrorState) {
             print('UserReg error');
              _toast(context, state.error);
-            return const Text("Loaded");
+            return const SizedBox();
           } else if (state is UserRegistrationLoadedState) {
             print('user reg loaded');
              Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) => const MachineConfiguratorScreen()));
-            return const Text("Loaded");
+            return const SizedBox();
           }
-          return const Text("not yet");
+          return const  SizedBox();
         });
   }
 

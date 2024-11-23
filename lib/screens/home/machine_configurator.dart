@@ -3,6 +3,7 @@
 import 'package:ams/model/get_user.dart';
 import 'package:ams/screens/feedback/feedback_screen.dart';
 import 'package:ams/screens/login/change_password.dart';
+import 'package:ams/screens/login/sign_in.dart';
 import 'package:ams/screens/vehicles/add_vehicle.dart';
 import 'package:ams/screens/vehicles/get_vheciles.dart';
 import 'package:ams/screens/vehicles/my_vehicles.dart';
@@ -144,7 +145,7 @@ class _MachineConfiguratorScreenState extends State<MachineConfiguratorScreen> {
             } else if (id == 4) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      const SignUpScreen()));
+                      const SignInScreen()));
             }else if (id == 5) {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
