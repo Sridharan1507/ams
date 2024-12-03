@@ -46,6 +46,7 @@ dependencies:
   geolocator: ^11.1.0
   geocoding: ^3.0.0
   flutter_svg: ^2.0.9
+  multi_dropdown: ^3.0.1
 
 dev_dependencies:
   flutter_test:

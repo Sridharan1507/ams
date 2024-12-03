@@ -1,7 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, must_be_immutable
 
+import 'package:ams/model/auth/servicelist.dart';
 import 'package:ams/model/get_user.dart';
+import 'package:ams/model/stores/liststores.dart';
 import 'package:ams/screens/feedback/feedback_screen.dart';
+import 'package:ams/screens/home/controller.dart';
+import 'package:ams/screens/login/authcon.dart';
 import 'package:ams/screens/login/change_password.dart';
 import 'package:ams/screens/login/sign_in.dart';
 import 'package:ams/screens/vehicles/add_vehicle.dart';
@@ -35,9 +39,18 @@ class _MachineConfiguratorScreenState extends State<MachineConfiguratorScreen> {
     else{
       getUserResponseData =GetUserResponseData(user: User(name: "name",email: "email.com"),role: Role(name: ""));
     }
+    getrecord();
     super.initState();
   }
+  StoreList? storeList;
+  List<Servicelist> services=[];
+getrecord()async{
+  storeList=  await HomeCon().getstores();
+  services=await  AuthController().getallservice();
+  setState(() {
 
+  });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,10 +73,10 @@ class _MachineConfiguratorScreenState extends State<MachineConfiguratorScreen> {
             title: const Row(
               children: [
                 Expanded(
-                    child: Text('AMB', style: TextStyle(color: Colors.black))),
+                    child: Text('Shops', style: TextStyle(color: Colors.black))),
               ],
             )),
-        body: SafeArea(child: _splash(context)));
+        body: SafeArea(child: _splash(context,storeList,services)));
   }
 
   Container drawerHeader() {
@@ -190,150 +203,77 @@ enum DrawerSections {
   Logout,
 }
 
-Widget _splash(BuildContext context) {
-  return Stack(
-    children: <Widget>[
-      Align(
+Widget _splash(BuildContext context,StoreList? storeList,List<Servicelist> service) {
+  return
+    Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        image: DecorationImage(
+          image: AssetImage(Constant.splashlogo),
+          fit: BoxFit.fill,
           alignment: Alignment.center,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              image: DecorationImage(
-                image: AssetImage(Constant.splashlogo),
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
-              ),
-            ),
-          )),
-  Positioned.fill(
-  child: Padding(
-    padding: const EdgeInsets.only(top: 130.0),
-    child: Align(
-      alignment: Alignment.topCenter,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => const GetVehicleScreen(),
-            ),
-          );
-        },
-        child: Container(
-          height: 200,
-          width: 300,
+        ),
+      ),child: GridView.builder(
+      itemCount: storeList?.stores.length??0,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 5.0,
+      mainAxisSpacing: 10.0,
+          childAspectRatio: 0.6
+    ), itemBuilder: (con,index){
+      Store store=  storeList!.stores[index];
+   var temp=   service.where((element) =>store.services.contains(element.id) ).toList();
+     return Container(
+
+          alignment: Alignment.center,
+
           decoration: BoxDecoration(
-            // image: DecorationImage(
-            //   image: AssetImage(Constant.orderImage),
-            //   fit: BoxFit.scaleDown,
+            // image:DecorationImage(
+            //   image: AssetImage(Constant.shop),
+            //   fit: BoxFit.fill,
             //   alignment: Alignment.center,
             // ),
-            border: Border.all(color: Colors.black54, width: 3),
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            color: Colors.white
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Push items to top and bottom
-            crossAxisAlignment: CrossAxisAlignment.center,  // Center horizontally
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image part inside the container
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(Constant.orderImage),
-                      fit: BoxFit.scaleDown,  // Adjust the image's fit
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                ),
-              ),
-              // Text part inside the container
+              Image.asset(Constant.shop),
               Padding(
-                padding: const EdgeInsets.all(8.0),  // Optional padding for the text
-                child: Text(
-                  'Order',  // Replace with your desired text
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,  // Change text color as needed
-                  ),
-                  textAlign: TextAlign.center,  // Center text horizontally
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  ),
-)
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
 
 
-,
-      Positioned.fill(
-          child: Padding(
-        padding: const EdgeInsets.only(bottom: 130.0),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          const AddVehicleScrenn()));
-            },
-            child: Container(
-          height: 200,
-          width: 300,
-          decoration: BoxDecoration(
-            // image: DecorationImage(
-            //   image: AssetImage(Constant.orderImage),
-            //   fit: BoxFit.scaleDown,
-            //   alignment: Alignment.center,
-            // ),
-            border: Border.all(color: Colors.black54, width: 3),
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Push items to top and bottom
-            crossAxisAlignment: CrossAxisAlignment.center,  // Center horizontally
-            children: [
-              // Image part inside the container
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(Constant.addImage),
-                      fit: BoxFit.scaleDown,  // Adjust the image's fit
-                      alignment: Alignment.center,
-                    ),
-                  ),
+
+                    Text(store.storeName.toUpperCase(),style: TextStyle(fontWeight: FontWeight.w800)),
+                  ],
+                ),
+              ), Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: [
+
+
+                    Text(store.address),
+                  ],
                 ),
               ),
-              // Text part inside the container
               Padding(
-                padding: const EdgeInsets.all(8.0),  // Optional padding for the text
-                child: Text(
-                  'Add',  // Replace with your desired text
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,  // Change text color as needed
-                  ),
-                  textAlign: TextAlign.center,  // Center text horizontally
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text("Services :"),
               ),
+
+              for (var element in temp)...{
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(element.name),
+                )
+              }
             ],
-          ),
-        ),
-          ),
-        ),
-      )),
-    ],
-  );
+          ),);
+    }),
+    );
 }

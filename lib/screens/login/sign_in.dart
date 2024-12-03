@@ -1,5 +1,6 @@
 import 'package:ams/screens/home/machine_configurator.dart';
 import 'package:ams/screens/login/login.dart';
+import 'package:ams/screens/login/storeregis.dart';
 import 'package:flutter/material.dart';
 import 'package:ams/constant.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -59,12 +60,38 @@ class _SignInScreenState extends State<SignInScreen> {
                     topRight: Radius.circular(25),
                     topLeft: Radius.circular(25)),
                 color: Colors.grey.shade100),
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: MediaQuery.of(context).size.height * 0.30,
             width: MediaQuery.of(context).size.width,
             child: Padding(
                 padding: const EdgeInsets.only(top:20),
                 child: Column(
                   children: [
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                            const StoreUser()));
+
+                        //      Navigator.of(context).push(MaterialPageRoute(
+                        // builder: (BuildContext context) =>
+                        //      const MachineConfiguratorScreen()));
+
+                      },
+                      child: Container(
+                          width: 300,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.horizontal(
+                                  right: Radius.circular(40),
+                                  left: Radius.circular(40))),
+                          child: const Center(child: Text("STORE USER",style:
+                          // GoogleFonts.sourceCodePro(textStyle:
+                          TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w600,),) )
+                        //  ),
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
                     GestureDetector(
                       onTap: (){
                        Navigator.of(context).push(MaterialPageRoute(
@@ -91,6 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     const SizedBox(height: 20,),
+
                     GestureDetector(
                       onTap: (){
                          Navigator.of(context).push(MaterialPageRoute(

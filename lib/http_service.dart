@@ -60,13 +60,16 @@ String processedUrl = resource.url!;
 
       final uri = Uri.parse(processedUrl);
 
-      final response = await http.get(uri, headers: headers);
-      log("url $uri");
-      log("full json ${response.body}");
+      var request = http.Request('GET', uri);
+      request.body = json.encode(resource.body);
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
       if (response.statusCode == 100) {
         return buildTokenExpiredNavigator(resource);
       } else if (response.statusCode == 200|| response.statusCode == 401) {
-        var responseJson = json.decode(response.body);
+        var responseJson = json.decode(await response.stream.bytesToString());
         dynamic res;
         if (responseJson['status'] == true) {
           res = resource.parse!(BaseResponse.fromJSON(responseJson));
@@ -77,7 +80,7 @@ String processedUrl = resource.url!;
         return res;
       } else {
          dynamic res;
-        var responseJson = json.decode(response.body);
+        var responseJson = json.decode(await response.stream.bytesToString());
         if (responseJson['status'] == false) {
             res = resource.errparse!(ErrResponse.fromJSON(responseJson));
         }

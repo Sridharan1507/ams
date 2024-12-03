@@ -9,24 +9,29 @@ const kPrimaryAccentLightColor = Color(0xFFF5F8F1);
 
 class Constant {
   static String travelsName = "EzeeBus";
-  static String splashlogo="lib/assets/images/pexels-aboodi-17366063.jpg"; 
-  static String splashlogo1="lib/assets/images/appstore.png"; 
+  static String splashlogo="lib/assets/images/download.jpg";
+  static String shop="lib/assets/images/shop.webp";
+  static String splashlogo1="lib/assets/images/download.jpg";
   static String orderImage='lib/assets/images/21395.jpg';
   static String addImage='lib/assets/images/uzmd_cpph_150410.jpg';
-  static String cartoon="lib/assets/images/beautiful-minimalist-landscape.jpg";
-  static String getAuth="http://rljzs2n.localto.net/vehicle_rent/appApiv1/auth";
-  static String changePassword='http://rljzs2n.localto.net/vehicle_rent/appApiv1/change-password';
-  static String regenToken='http://rljzs2n.localto.net/vehicle_rent/appApiv1/refresh-token';
-  static String userRegister='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register';
-  static String getUser='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-user';
-  static String getAllUsers='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-all-users';
-  static String getvehicles='https://rljzs2n.localto.net/vehicle_rent/appApiv1/get_vehicles';
-  static String getvehicleCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-category';
-  static String getvehicleSubCategory='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get-vehicle-sub-category';
-  static String addVechile='http://rljzs2n.localto.net/vehicle_rent/appApiv1/register-vehicle';
-  static String getMyvechiles='http://rljzs2n.localto.net/vehicle_rent/appApiv1/my-vehicles';
-  static String getEnquiries='http://rljzs2n.localto.net/vehicle_rent/appApiv1/get_enquiries';
-  static String useraddenquiry='https://rljzs2n.localto.net/vehicle_rent/appApiv1/add-enquiry/';
+  static String cartoon="lib/assets/images/mainscreen.jpg";
+  static String baseurl="https://rljzs2n.localto.net/my_mechanic/appapiv1";
+  static String getAuth="$baseurl/auth";
+  static String changePassword='$baseurl/change-password';
+  static String regenToken='$baseurl/refresh-token';
+  static String userRegister='$baseurl/register';
+  static String getUser='$baseurl/get-user';
+  static String getAllUsers='$baseurl/get-all-users';
+  static String getvehicles='$baseurl/get_vehicles';
+  static String getvehicleCategory='$baseurl/get-vehicle-category';
+  static String getvehicleSubCategory='$baseurl/get-vehicle-sub-category';
+  static String addVechile='$baseurl/register-vehicle';
+  static String getMyvechiles='$baseurl/my-vehicles';
+  static String getEnquiries='$baseurl/get_enquiries';
+  static String useraddenquiry='$baseurl/add-enquiry/';
+  static String service='$baseurl/services';
+  static String addmechanic='$baseurl/mechanic-register';
+  static String stores='$baseurl/stores';
 
   //region Defaults
 
