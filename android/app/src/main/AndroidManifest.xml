@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ams">
+    package="com.example.vas">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="AMS"
+        android:label="VAS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
