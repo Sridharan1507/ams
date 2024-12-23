@@ -39,41 +39,42 @@ class _StoreUserState extends State<StoreUser> {
   TextEditingController stateCon = TextEditingController();
   TextEditingController cityCon = TextEditingController();
   TextEditingController pinCon = TextEditingController();
-  MultiSelectController<Servicelist> controller = MultiSelectController<Servicelist>();
+  MultiSelectController<Servicelist> controller =
+      MultiSelectController<Servicelist>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? usernameErrorMessage;
   AuthBloc authBloc = AuthBloc();
-  List<Servicelist> services=[];
-  List<DropdownItem<Servicelist>> servicedropdown=[];
+  List<Servicelist> services = [];
+  List<DropdownItem<Servicelist>> servicedropdown = [];
+  bool isload = false;
   @override
   void initState() {
-    // getrecord();
+    getrecord();
     super.initState();
   }
-getrecord()async{
 
-  services=await  AuthController().getallservice();
+  getrecord() async {
+    isload = false;
+    services = await AuthController().getallservice();
+    isload = true;
 
+    controller = MultiSelectController<Servicelist>();
+    servicedropdown = services
+        .map(
+          (item) => DropdownItem<Servicelist>(label: item.name, value: item),
+        )
+        .toList();
+    setState(() {});
+  }
 
-  controller = MultiSelectController<Servicelist>();
-  servicedropdown=  services
-      .map(
-        (item) => DropdownItem<Servicelist>(label: item.name, value: item
-
-    ),
-  )
-      .toList();
-
-  print("yyy${servicedropdown.length}");
-
-}
-@override
+  @override
   void dispose() {
-  controller.dispose();
+    controller.dispose();
     // TODO: implement dispose
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return buildActiveTripInfoVehicleAndDriver();
@@ -97,16 +98,22 @@ getrecord()async{
               children: [
                 Expanded(
                     child:
-                    Text('Sign Up', style: TextStyle(color: Colors.black))),
+                        Text('Sign Up', style: TextStyle(color: Colors.black))),
               ],
             )),
         body: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [buildVehicleDriverForm(), buildSaveButton()],
+          child: Center(
+            child: Visibility(
+              visible: isload,
+              replacement: const CircularProgressIndicator(),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [buildVehicleDriverForm(), buildSaveButton()],
+                  ),
+                ),
               ),
             ),
           ),
@@ -114,6 +121,7 @@ getrecord()async{
       ),
     );
   }
+
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -174,7 +182,7 @@ getrecord()async{
                   enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 1),
+                        BorderSide(color: Constant.borderColorLight!, width: 1),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -185,7 +193,7 @@ getrecord()async{
                   focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 2),
+                        BorderSide(color: Constant.borderColorLight!, width: 2),
                   ),
                 ),
               ),
@@ -225,7 +233,7 @@ getrecord()async{
                   enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 1),
+                        BorderSide(color: Constant.borderColorLight!, width: 1),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -236,7 +244,7 @@ getrecord()async{
                   focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 2),
+                        BorderSide(color: Constant.borderColorLight!, width: 2),
                   ),
                 ),
               ),
@@ -276,7 +284,7 @@ getrecord()async{
                   enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 1),
+                        BorderSide(color: Constant.borderColorLight!, width: 1),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -287,7 +295,7 @@ getrecord()async{
                   focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 2),
+                        BorderSide(color: Constant.borderColorLight!, width: 2),
                   ),
                 ),
               ),
@@ -351,7 +359,7 @@ getrecord()async{
                   enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 1),
+                        BorderSide(color: Constant.borderColorLight!, width: 1),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -362,7 +370,7 @@ getrecord()async{
                   focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 2),
+                        BorderSide(color: Constant.borderColorLight!, width: 2),
                   ),
                 ),
               ),
@@ -402,7 +410,7 @@ getrecord()async{
                   enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 1),
+                        BorderSide(color: Constant.borderColorLight!, width: 1),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -413,7 +421,7 @@ getrecord()async{
                   focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 2),
+                        BorderSide(color: Constant.borderColorLight!, width: 2),
                   ),
                 ),
               ),
@@ -453,7 +461,7 @@ getrecord()async{
                   enabledBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 1),
+                        BorderSide(color: Constant.borderColorLight!, width: 1),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -464,7 +472,7 @@ getrecord()async{
                   focusedBorder: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     borderSide:
-                    BorderSide(color: Constant.borderColorLight!, width: 2),
+                        BorderSide(color: Constant.borderColorLight!, width: 2),
                   ),
                 ),
               ),
@@ -526,7 +534,6 @@ getrecord()async{
           ),
           Column(
             children: [
-
               SizedBox(
                 height: 20,
               ),
@@ -562,7 +569,8 @@ getrecord()async{
                       labelText: 'Enter Store name',
                       labelStyle: Theme.of(context).custom().textBody5_Light_M,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 1),
                       ),
@@ -573,7 +581,8 @@ getrecord()async{
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 2),
                       ),
@@ -613,7 +622,8 @@ getrecord()async{
                       labelText: 'Enter Store address',
                       labelStyle: Theme.of(context).custom().textBody5_Light_M,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 1),
                       ),
@@ -624,7 +634,8 @@ getrecord()async{
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 2),
                       ),
@@ -664,7 +675,8 @@ getrecord()async{
                       labelText: 'Enter State',
                       labelStyle: Theme.of(context).custom().textBody5_Light_M,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 1),
                       ),
@@ -675,14 +687,16 @@ getrecord()async{
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 2),
                       ),
                     ),
                   ),
                 ],
-              ), Column(
+              ),
+              Column(
                 children: [
                   Row(
                     children: [
@@ -714,7 +728,8 @@ getrecord()async{
                       labelText: 'Enter Pincode',
                       labelStyle: Theme.of(context).custom().textBody5_Light_M,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 1),
                       ),
@@ -725,7 +740,8 @@ getrecord()async{
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(
                             color: Constant.borderColorLight!, width: 2),
                       ),
@@ -736,66 +752,62 @@ getrecord()async{
               SizedBox(
                 height: 20,
               ),
-              FutureBuilder(
-                future: getrecord(),
-                builder:(con,data)=> MultiDropdown<Servicelist>(
-                  items:servicedropdown,
-                  controller: controller,
-                  enabled: true,
-                  searchEnabled: true,
-                  chipDecoration: const ChipDecoration(
-                    backgroundColor: Colors.yellow,
-                    wrap: true,
-                    runSpacing: 2,
-                    spacing: 10,
-                  ),
-                  fieldDecoration: FieldDecoration(
-                    hintText: 'Services',
-                    hintStyle: const TextStyle(color: Colors.black87),
-                    prefixIcon: const Icon(CupertinoIcons.settings),
-                    showClearIcon: false,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  dropdownDecoration: const DropdownDecoration(
-                    marginTop: 2,
-                    maxHeight: 500,
-                    header: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'Select Services',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  dropdownItemDecoration: DropdownItemDecoration(
-                    selectedIcon:
-                    const Icon(Icons.check_box, color: Colors.green),
-                    disabledIcon:
-                    Icon(Icons.lock, color: Colors.grey.shade300),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a country';
-                    }
-                    return null;
-                  },
-                  onSelectionChange: (selectedItems) {
-                    debugPrint("OnSelectionChange: $selectedItems");
-                  },
+              MultiDropdown<Servicelist>(
+                items: servicedropdown,
+                controller: controller,
+                enabled: true,
+                searchEnabled: true,
+                chipDecoration: const ChipDecoration(
+                  backgroundColor: Colors.yellow,
+                  wrap: true,
+                  runSpacing: 2,
+                  spacing: 10,
                 ),
+                fieldDecoration: FieldDecoration(
+                  hintText: 'Services',
+                  hintStyle: const TextStyle(color: Colors.black87),
+                  prefixIcon: const Icon(CupertinoIcons.settings),
+                  showClearIcon: false,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                dropdownDecoration: const DropdownDecoration(
+                  marginTop: 2,
+                  maxHeight: 500,
+                  header: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      'Select Services',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                dropdownItemDecoration: DropdownItemDecoration(
+                  selectedIcon:
+                      const Icon(Icons.check_box, color: Colors.green),
+                  disabledIcon: Icon(Icons.lock, color: Colors.grey.shade300),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select a country';
+                  }
+                  return null;
+                },
+                onSelectionChange: (selectedItems) {
+                  debugPrint("OnSelectionChange: $selectedItems");
+                },
               ),
               SizedBox(
                 height: 20,
@@ -842,53 +854,62 @@ getrecord()async{
         buildBloc(),
         buildElevatedButtonMedium("Save", Constant.buttonNegativeOkColor,
             Constant.buttonColorDark, Constant.buttonColorDark, () async {
-              if (nameTextEditingController.text.isEmpty) {
-                _toast(context, "Please enter Name");
-              } else if (userNameTextEditingController.text.isEmpty) {
-                _toast(context, "Please enter User Name");
-              } else if (emailTextEditingController.text.isEmpty) {
-                _toast(context, "Please enter Email");
-              } else if (passwordTextEditingController.text.isEmpty) {
-                _toast(context, "Please enter Password");
-              } else if (mobileTextEditingController.text.isEmpty) {
-                _toast(context, "Please enter Mobile numer");
-              } else if (dobTextEditingController.text.isEmpty) {
-                _toast(context, "Please enter Date of Birth");
-              } else if (genderTextEditingController.text.isEmpty &&
-                  (genderTextEditingController.text.trim() == "male" ||
-                      genderTextEditingController.text.trim() == "female")) {
-                _toast(context, "Please enter valid Gender");
-              }  else {
-                List<int> serviceid=[];
-                controller.selectedItems.forEach((element) {
-                  serviceid.add(int.parse(element.value.id));
-                });
-                Userstore userRegisterRequestBody =
-                Userstore(
-                  name: nameTextEditingController.text.trim(),
-                  userName: userNameTextEditingController.text.trim(),
-                  email: emailTextEditingController.text.trim(),
-                  password: passwordTextEditingController.text.trim(),
-                  mobileNumber: mobileTextEditingController.text.trim(),
-                  dob:DateTime.now(),
-                  gender: genderTextEditingController.text.trim(),
-
-                  deviceToken: "", store: [Store(storeName: storeNameCon.text, categoryId: 2, services: serviceid.toString().replaceAll("[", "").replaceAll("]", ""), address: addressCon.text, city: "cuddalore", state:stateCon.text, pincode: 607001, aadharNumber: '33e', coords: '12.91484690850322, 80.10231545247325')],
-
-                );
-                print(jsonEncode(userRegisterRequestBody.toJson()));
-          String status=   await   AuthController().addstoreuser(userRegisterRequestBody);
+          if (nameTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Name");
+          } else if (userNameTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter User Name");
+          } else if (emailTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Email");
+          } else if (passwordTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Password");
+          } else if (mobileTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Mobile numer");
+          } else if (dobTextEditingController.text.isEmpty) {
+            _toast(context, "Please enter Date of Birth");
+          } else if (genderTextEditingController.text.isEmpty &&
+              (genderTextEditingController.text.trim() == "male" ||
+                  genderTextEditingController.text.trim() == "female")) {
+            _toast(context, "Please enter valid Gender");
+          } else {
+            List<int> serviceid = [];
+            controller.selectedItems.forEach((element) {
+              serviceid.add(int.parse(element.value.id));
+            });
+            Userstore userRegisterRequestBody = Userstore(
+              name: nameTextEditingController.text.trim(),
+              userName: userNameTextEditingController.text.trim(),
+              email: emailTextEditingController.text.trim(),
+              password: passwordTextEditingController.text.trim(),
+              mobileNumber: mobileTextEditingController.text.trim(),
+              dob: DateTime.now(),
+              gender: genderTextEditingController.text.trim(),
+              deviceToken: "",
+              store: [
+                Store(
+                    storeName: storeNameCon.text,
+                    categoryId: 2,
+                    services: serviceid
+                        .toString()
+                        .replaceAll("[", "")
+                        .replaceAll("]", ""),
+                    address: addressCon.text,
+                    city: "cuddalore",
+                    state: stateCon.text,
+                    pincode: 607001,
+                    aadharNumber: '33e',
+                    coords: '12.91484690850322, 80.10231545247325')
+              ],
+            );
+            print(jsonEncode(userRegisterRequestBody.toJson()));
+            String status =
+                await AuthController().addstoreuser(userRegisterRequestBody);
 
             _toast(context, status);
-            if(status=="success"){
+            if (status == "success") {
               Navigator.pop(context);
             }
-
-
-              }
-
-
-            })
+          }
+        })
       ],
     );
   }
@@ -906,10 +927,11 @@ getrecord()async{
           } else if (state is UserRegistrationLoadedState) {
             print('user reg loaded');
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => const MachineConfiguratorScreen()));
+                builder: (BuildContext context) =>
+                    const MachineConfiguratorScreen()));
             return const SizedBox();
           }
-          return const  SizedBox();
+          return const SizedBox();
         });
   }
 

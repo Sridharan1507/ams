@@ -15,7 +15,7 @@ class Constant {
   static String orderImage='lib/assets/images/21395.jpg';
   static String addImage='lib/assets/images/uzmd_cpph_150410.jpg';
   static String cartoon="lib/assets/images/mainscreen.jpg";
-  static String baseurl="https://rljzs2n.localto.net/my_mechanic/appapiv1";
+  static String baseurl="https://pweoqke.localto.net/my_mechanic/appapiv1";
   static String getAuth="$baseurl/auth";
   static String changePassword='$baseurl/change-password';
   static String regenToken='$baseurl/refresh-token';

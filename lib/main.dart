@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-import 'package:ams/screens/home/machine_configurator.dart';
 import 'package:ams/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ams/screens/login/sign_in.dart';
